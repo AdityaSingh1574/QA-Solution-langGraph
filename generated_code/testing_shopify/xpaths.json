@@ -1,0 +1,7 @@
+
+{
+    "noir jacket" : "//*[@id="product-2"]",
+    "add to cart button" : "//*[@id="add"]",
+    "cart button" : "//*[@id="minicart"]/a[2]",
+    "first name in cart" : "//*[@id="cart"]/form/div[1]/div[2]/div[1]/div/h3/a"
+}

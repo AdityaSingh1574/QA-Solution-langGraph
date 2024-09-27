@@ -1,0 +1,7 @@
+Scenario: Hartron TestControl Search By Name/Tag Verify Records
+    Given user is on TestControl screen
+    When enter search text in Search by <course-name>
+    Then verify if records are filtered by checking the count of courses
+    |course-name    |
+    |Core Java      |
+    |Python         |

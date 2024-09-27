@@ -1,0 +1,10 @@
+Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>"
+    Given user is on TestControl screen
+    When click on Actions
+    Then verify if "<Action Data>" exists in action menu by clicking on it
+    And verify if user is navigated to "<Screen Name>"
+    Examples:
+    |Screen Name        | Action Data         |
+    |Candidate(s) Report| Candidate Report    |
+    |Evaluate Candidate | Evaluate Candidate  |
+    |Test Summary       | Test Summary        |

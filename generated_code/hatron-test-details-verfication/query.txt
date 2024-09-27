@@ -1,0 +1,4 @@
+Scenario: Hartron TestControl Verify Test Details Screen In Test Management
+    Given user is on TestControl screen
+    When click on first Test get test details
+    Then verify if test details screen is displayed and print the test url

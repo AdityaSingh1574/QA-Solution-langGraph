@@ -1,0 +1,4 @@
+Scenario: Hartron TestControl Verify HSC Examination And Exam Template Navigation
+    Given user is on TestControl screen at https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Then Verify if user is on HSC Examination screen 
+    Then navigate to Exam Template Management and verify if user is on that screen

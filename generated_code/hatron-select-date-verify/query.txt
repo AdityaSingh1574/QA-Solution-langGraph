@@ -1,0 +1,7 @@
+Scenario: Hartron TestControl Select Date and Verify Filtered Records Count
+    Given user is on TestControl screen
+    Click on the start date selection button  
+    select the start date 
+    click onn the end date selection button
+    select the end date
+    Then verify if records are filter

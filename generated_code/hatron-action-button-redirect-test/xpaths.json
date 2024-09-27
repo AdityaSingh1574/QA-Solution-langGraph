@@ -1,0 +1,7 @@
+
+{
+    "action button" : "//*[@id="font-size"]/athena-action/p-button/button",
+    "candidate report button" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[1]",
+    "test summary button" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[2]",
+    "evaluate candidate button" : "None"
+}

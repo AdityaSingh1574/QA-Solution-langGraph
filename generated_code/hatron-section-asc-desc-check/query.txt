@@ -1,0 +1,4 @@
+Scenario: Hartron TestControl Click On Section Name Verify Records Are Sorted
+    Given user is on TestControl screen
+    When click on Name section
+    Then verify if section is getting sorted in increasing form by printing first 3 Names

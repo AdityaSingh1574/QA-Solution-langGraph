@@ -1,0 +1,4 @@
+{
+    "HCS Examination tab" : "//*[@id="p-tabpanel-0-label"]",
+    "Exam Template Management Tab" : "//*[@id="p-tabpanel-1-label"]"
+}

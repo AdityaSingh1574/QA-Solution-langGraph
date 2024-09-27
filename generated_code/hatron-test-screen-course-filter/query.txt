@@ -1,0 +1,5 @@
+Scenario: Hartron TestControl Filter Course Verify Course Details Are Displayed
+    Given user is on TestControl screen
+    When filter course values by clicking on the coures drop down and selecting <course-name>
+    Then verify if records are filtered based on total records by printing the records count in the counter
+    

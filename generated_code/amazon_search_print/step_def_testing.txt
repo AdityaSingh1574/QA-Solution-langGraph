@@ -1,0 +1,156 @@
+Certainly! I'll create the step definition and implementation files based on the given feature file and instructions. I'll use Java with Selenium WebDriver and Cucumber for this implementation.
+
+First, let's create the step definition file:
+
+```java
+STEP-DEFINITION-FILE-START
+package stepdefinitions;
+
+import implementation.Implementation;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
+
+public class StepDefinition {
+    private Implementation implementation = new Implementation();
+
+    @Given("user is on the Amazon India homepage")
+    public void launchUrl() {
+        String url = "https://www.amazon.in/";
+        implementation.launchUrl(url);
+    }
+
+    @When("user enters {string} in the search box")
+    public void enterSearchTerm(String searchTerm) {
+        implementation.enterSearchTerm(searchTerm);
+    }
+
+    @And("user clicks on the search button")
+    public void clickSearchButton() {
+        implementation.clickSearchButton();
+    }
+
+    @Then("the search results for {string} should be displayed")
+    public void verifySearchResults(String searchTerm) {
+        implementation.verifySearchResults(searchTerm);
+    }
+
+    @And("user should see a list of {string} in the search results")
+    public void verifyListOfItems(String itemType) {
+        implementation.verifyListOfItems(itemType);
+    }
+
+    @And("user prints the names of the {string} displayed")
+    public void printItemNames(String itemType) {
+        implementation.printItemNames(itemType);
+    }
+
+    @Then("close the browser")
+    public void closeBrowser() {
+        implementation.closeBrowser();
+    }
+}
+STEP-DEFINITION-FILE-END
+```
+
+Now, let's create the implementation file:
+
+```java
+IMPLEMENTATION-FILE-START
+package implementation;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
+
+public class Implementation {
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    public void launchUrl(String url) {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get(url);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    public void enterSearchTerm(String searchTerm) {
+        WebElement searchBox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"twotabsearchtextbox\"]")));
+        searchBox.clear();
+        searchBox.sendKeys(searchTerm);
+    }
+
+    public void clickSearchButton() {
+        WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"nav-search-submit-button\"]")));
+        searchButton.click();
+    }
+
+    public void verifySearchResults(String searchTerm) {
+        wait.until(ExpectedConditions.titleContains(searchTerm));
+        System.out.println("Search results for '" + searchTerm + "' are displayed.");
+    }
+
+    public void verifyListOfItems(String itemType) {
+        List<WebElement> searchResults = driver.findElements(By.xpath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div/div/div/div/span/div/div/div[2]/div[2]/div[2]/h2/span"));
+        System.out.println("Number of " + itemType + " found: " + searchResults.size());
+    }
+
+    public void printItemNames(String itemType) {
+        List<WebElement> searchResults = driver.findElements(By.xpath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div/div/div/div/span/div/div/div[2]/div[2]/div[2]/h2/span"));
+        System.out.println("Names of " + itemType + " displayed:");
+        for (int i = 0; i < Math.min(5, searchResults.size()); i++) {
+            System.out.println((i + 1) + ". " + searchResults.get(i).getText());
+        }
+    }
+
+    public void closeBrowser() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+IMPLEMENTATION-FILE-END
+```
+
+To save these files using a simple Python script, you can use the following code:
+
+```python
+import os
+
+def save_file(filename, content):
+    with open(filename, 'w') as file:
+        file.write(content)
+
+step_definition = """
+STEP-DEFINITION-FILE-START
+... (paste the step definition code here) ...
+STEP-DEFINITION-FILE-END
+"""
+
+implementation = """
+IMPLEMENTATION-FILE-START
+... (paste the implementation code here) ...
+IMPLEMENTATION-FILE-END
+"""
+
+# Save step definition file
+save_file('StepDefinition.java', step_definition.strip())
+
+# Save implementation file
+save_file('Implementation.java', implementation.strip())
+
+print("Files have been saved successfully.")
+```
+
+This script will create two files: `StepDefinition.java` and `Implementation.java` with the respective code. Make sure to replace the placeholder comments with the actual code provided above.
+
+These files implement the feature file's scenarios, using the provided XPaths and following the given instructions. The implementation uses WebDriverManager for browser setup, includes wait times for page loads and element interactions, and implements all the required steps from the feature file.

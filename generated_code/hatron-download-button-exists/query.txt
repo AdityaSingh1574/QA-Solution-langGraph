@@ -1,0 +1,4 @@
+Scenario: Hartron TestControl Verify Export Test Data Functionality
+    Given user is on TestControl screen
+    When click on Export test data button
+    And verify if download button exists

@@ -1,0 +1,4 @@
+{
+    "search input" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[4]/span/input",
+    "course counter" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/div[2]/div[1]/span"
+}

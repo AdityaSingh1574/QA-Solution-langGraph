@@ -1,0 +1,9 @@
+Scenario Outline: Hartron TestControl Verify Action Menu Data
+    Given user is on TestControl screen
+    When click on Actions
+    Then verify if "<Action Data>" exists in action menu by clicking it
+    Examples:
+    |Action Data|
+    |Candidate Report|
+    |Evaluate Candidate|
+    |Test Summary|

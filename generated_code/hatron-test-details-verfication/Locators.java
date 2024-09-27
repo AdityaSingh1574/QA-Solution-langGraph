@@ -1,0 +1,2 @@
+String content = "\n        ---LOCATOR-FILE-CODE---\n        # filename: locators.py\n\nfrom selenium.webdriver.common.by import By\n\nclass Locators:\n    # First test locator\n    FONT_SIZE = (By.XPATH\n        ---LOCATOR-FILE-CODE---\n        ";
+String id = "2731ad9d-f173-4bdb-954f-3310a5b5bce7";
