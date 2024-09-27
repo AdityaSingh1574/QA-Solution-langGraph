@@ -1,3 +1,9 @@
+Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+            User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+            User types password : 'Siva@123' and clicks on Login button
+            User clicks on the hanmburger button
+            User Clicks on Tests dropdown
+            user selects Test controls 
 Scenario: Hartron TestControl Filter Course Verify Course Details Are Displayed
     Given user is on TestControl screen
     When filter course values by clicking on the coures drop down and selecting <course-name>

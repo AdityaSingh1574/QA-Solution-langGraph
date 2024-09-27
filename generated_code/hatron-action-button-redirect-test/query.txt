@@ -1,4 +1,10 @@
-Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>"
+Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+            User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+            User types password : 'Siva@123' and clicks on Login button
+            User clicks on the hanmburger button
+            User Clicks on Tests dropdown
+            user selects Test controls 
+Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>":
     Given user is on TestControl screen
     When click on Actions
     Then verify if "<Action Data>" exists in action menu by clicking on it

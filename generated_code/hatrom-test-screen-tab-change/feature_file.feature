@@ -4,7 +4,7 @@ Feature: Hartron TestControl HSC Examination and Exam Template Navigation
   So that I can manage examination and template related tasks
 
 Scenario: Verify HSC Examination Screen and Navigate to Exam Template Management
-  Given user is on TestControl screen at https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+  Given user is on TestControl screen
   When the page loads completely
   Then the user should see the HSC Examination screen
   When the user navigates to Exam Template Management

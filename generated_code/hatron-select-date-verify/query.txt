@@ -1,3 +1,9 @@
+Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+            User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+            User types password : 'Siva@123' and clicks on Login button
+            User clicks on the hanmburger button
+            User Clicks on Tests dropdown
+            user selects Test controls 
 Scenario: Hartron TestControl Select Date and Verify Filtered Records Count
     Given user is on TestControl screen
     Click on the start date selection button  
