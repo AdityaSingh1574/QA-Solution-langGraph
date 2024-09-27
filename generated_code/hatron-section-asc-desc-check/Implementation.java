@@ -9,47 +9,78 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Implementation {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    public void launchUrl() {
+    public void launchUrl(String url) {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+        driver.get(url);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("https://your-test-control-url.com"); // Replace with actual URL
     }
 
-    public void clickOnNameSection() {
+    public void selectEmailOption() {
+        WebElement loginDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown")));
+        loginDropdown.click();
+        WebElement emailOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]")));
+        emailOption.click();
+    }
+
+    public void enterEmail(String email) {
+        WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        emailInput.sendKeys(email);
+    }
+
+    public void enterPassword(String password) {
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        passwordInput.sendKeys(password);
+    }
+
+    public void clickLoginButton() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button")));
+        loginButton.click();
+    }
+
+    public void clickHamburgerButton() {
+        WebElement hamburgerButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em")));
+        hamburgerButton.click();
+    }
+
+    public void clickTestsDropdown() {
+        WebElement testsDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a")));
+        testsDropdown.click();
+    }
+
+    public void selectTestControls() {
+        WebElement testControlsOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a")));
+        testControlsOption.click();
+    }
+
+    public void clickNameSection() {
         WebElement nameSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div/athena-test-control/p-tabview/div/div/p-tabpanel[1]/div/athena-placement-drives/div/div/div/p-table/div/div[2]/table/thead/tr/th[1]")));
         nameSection.click();
     }
 
-    public void verifySortingAndPrintNames() {
-        List<String> names = new ArrayList<>();
+    public void verifyAscendingOrder() {
+        List<WebElement> nameElements = driver.findElements(By.xpath("//table/tbody/tr/td[1]"));
+        String previousName = "";
+        for (WebElement nameElement : nameElements) {
+            String currentName = nameElement.getText();
+            if (!previousName.isEmpty() && currentName.compareTo(previousName) < 0) {
+                throw new AssertionError("Names are not in ascending order");
+            }
+            previousName = currentName;
+        }
+    }
+
+    public void printFirstThreeNames() {
         for (int i = 1; i <= 3; i++) {
-            String xpath = String.format("/html/body/athena-root/div/athena-layout/div/div[2]/div/athena-test-control/p-tabview/div/div/p-tabpanel[1]/div/athena-placement-drives/div/div/div/p-table/div/div[2]/table/tbody/tr[%d]/td[1]", i);
-            WebElement nameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
-            names.add(nameElement.getText());
-        }
-
-        List<String> sortedNames = new ArrayList<>(names);
-        Collections.sort(sortedNames);
-
-        System.out.println("First 3 Names:");
-        for (String name : names) {
-            System.out.println(name);
-        }
-
-        if (names.equals(sortedNames)) {
-            System.out.println("Names are sorted in increasing order.");
-        } else {
-            System.out.println("Names are not sorted in increasing order.");
+            WebElement nameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div/athena-test-control/p-tabview/div/div/p-tabpanel[1]/div/athena-placement-drives/div/div/div/p-table/div/div[2]/table/tbody/tr[" + i + "]/td[1]")));
+            System.out.println("Name " + i + ": " + nameElement.getText());
         }
     }
 
