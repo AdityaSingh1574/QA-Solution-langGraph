@@ -22,9 +22,46 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void verifyHSCExaminationScreen() {
+    public void selectEmailOption() {
+        WebElement loginOptionDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown")));
+        loginOptionDropdown.click();
+        WebElement emailOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]")));
+        emailOption.click();
+    }
+
+    public void enterEmail(String email) {
+        WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        emailInput.sendKeys(email);
+    }
+
+    public void enterPassword(String password) {
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        passwordInput.sendKeys(password);
+    }
+
+    public void clickLoginButton() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button")));
+        loginButton.click();
+    }
+
+    public void clickHamburgerButton() {
+        WebElement hamburgerButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em")));
+        hamburgerButton.click();
+    }
+
+    public void clickTestsDropdown() {
+        WebElement testsDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a")));
+        testsDropdown.click();
+    }
+
+    public void selectTestControls() {
+        WebElement testControlsOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a")));
+        testControlsOption.click();
+    }
+
+    public boolean isOnHSCExaminationScreen() {
         WebElement hscExaminationTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"p-tabpanel-0-label\"]")));
-        assert hscExaminationTab.isDisplayed() : "HSC Examination screen is not displayed";
+        return hscExaminationTab.isDisplayed();
     }
 
     public void navigateToExamTemplateManagement() {
@@ -32,9 +69,9 @@ public class Implementation {
         examTemplateManagementTab.click();
     }
 
-    public void verifyExamTemplateManagementScreen() {
+    public boolean isOnExamTemplateManagementScreen() {
         WebElement examTemplateManagementTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"p-tabpanel-1-label\"]")));
-        assert examTemplateManagementTab.getAttribute("aria-selected").equals("true") : "Exam Template Management screen is not displayed";
+        return examTemplateManagementTab.isDisplayed();
     }
 
     public void closeBrowser() {

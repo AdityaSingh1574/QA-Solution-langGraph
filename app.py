@@ -505,18 +505,38 @@ if __name__ == "__main__":
 
     xpath_string = """
     {
-    "course dropdown buttom" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/span",
-    "dwt option" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/div[3]/div[2]/ul/p-dropdownitem[2]/li",
-    "Php Mysql option" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/div[3]/div[2]/ul/p-dropdownitem[3]/li",
-    "records counter" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/div[2]/div[1]/span"
+    "login option drop down" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown",
+    "login option email" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]",
+    "email input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input",
+    "password input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input",
+    "Login button input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button",
+    "hamburng button" : "/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em",
+    "Tests dropdown" : "/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a",
+    "Test Controls options" : "/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a",
+    "action button" : "//*[@id="font-size"]/athena-action/p-button/button",
+    "candidate report button" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[1]",
+    "test summary button" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[2]",
+    "evaluate candidate button" : "None"
     }
     """
     
     user_story = """
-    Scenario: Hartron TestControl Filter Course Verify Course Details Are Displayed
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>":
     Given user is on TestControl screen
-    When filter course values by clicking on the coures drop down and selecting <course-name>
-    Then verify if records are filtered based on total records by printing the records count in the counter
+    When click on Actions
+    Then verify if "<Action Data>" exists in action menu by clicking on it
+    And verify if user is navigated to "<Screen Name>"
+    Examples:
+    |Screen Name        | Action Data         |
+    |Candidate(s) Report| Candidate Report    |
+    |Evaluate Candidate | Evaluate Candidate  |
+    |Test Summary       | Test Summary        |
     """
     
     epic_link = ""
