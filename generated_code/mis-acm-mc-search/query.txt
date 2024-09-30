@@ -9,6 +9,7 @@ Feature: Access Card Management Features
     Then User should be navigated to MIS homepage
   Scenario Outline: Manage Access Card : Search functionality
     When user navigates on "Access Card Management" and then "Manage Access Card"
+    User is redirected to the "Manage Access Card" page
     And searching a "<Card Number>"card by typing "<Card Number>" in the search input
     Then Verify search function is "<Card Number>"working in mac
     Examples:
