@@ -553,29 +553,35 @@ if __name__ == "__main__":
     app = initialize_graph()
 
     xpath_string = """
-    {
+{
     "user name input"  : "/html/body/div[1]/div[1]/div/form/div[3]/input",
     "password input" : "/html/body/div[1]/div[1]/div/form/div[4]/input",
     "sign in button" : "/html/body/div[1]/div[1]/div/form/div[5]/div[2]/input",
     "Access card management dropdown" : "/html/body/nav/div/div[1]/ul/li[14]/span",
     "User card Management" : "/html/body/nav/div/div[1]/ul/li[14]/ul/li[2]/a",
-    "entry selection drop down" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[1]/label/select",
-    "selected entry 25 option" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[1]/label/select/option[2]",
-    "next button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[5]/ul/li[9]/a",
-    "previous button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[5]/ul/li[1]/a"
-    }
+    "Unmapped card history tab" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[1]/ul/li[2]/a",
+    "export button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[2]/section/div/div/div/section/div/div/div/div[2]/a",
+    "copy button" : "/html/body/div[16]/a[1]",
+    "excel button" : "/html/body/div[16]/a[2]"
+}
     """
     
     user_story = """
-    Scenario Out
-line: Manage Access Card : Verify paging functionality
-    When user navigates on "Access Card Management" and then "Manage Access Card"
-    And Verify Entries  changes to "<noOfRecords>" number of entries by selecting "<noOfRecords>" from the dropdown 
-    And Verify Next "Next" Button works
-    And Verify Previous "Previous" works
+    URL: https://mymis.geminisolutions.com/
+
+Scenario Outline:User Card Mapping :UnMapped Cards : Export Options
+    When user navigates on "Access Card Management" and then "User Card Mapping"
+    And User goes to Unmapped card history
+    When User click on export button two
+    And User click on Copy option two
+    And User click on Excel option two
+    And User verifies if Excel "<filename>" got downloaded
+    And User click on Print button two
+    And User verifies if Print"<filename>" works
     Examples:
-      | noOfRecords |
-      | 25          |
+      | filename          |
+      | User Card Mapping |
+
     """
     
     epic_link = ""
