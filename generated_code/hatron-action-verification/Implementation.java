@@ -22,13 +22,50 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void clickOnActions() {
-        WebElement actionButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"font-size\"]/athena-action/p-button/button")));
-        actionButton.click();
+    public void selectEmailOption() {
+        WebElement loginOptionDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown")));
+        loginOptionDropdown.click();
+        WebElement emailOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]")));
+        emailOption.click();
+    }
+
+    public void enterEmail(String email) {
+        WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        emailInput.sendKeys(email);
+    }
+
+    public void enterPassword(String password) {
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        passwordInput.sendKeys(password);
+    }
+
+    public void clickLoginButton() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button")));
+        loginButton.click();
+    }
+
+    public void clickHamburgerButton() {
+        WebElement hamburgerButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em")));
+        hamburgerButton.click();
+    }
+
+    public void clickTestsDropdown() {
+        WebElement testsDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a")));
+        testsDropdown.click();
+    }
+
+    public void selectTestControls() {
+        WebElement testControlsOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a")));
+        testControlsOption.click();
+    }
+
+    public void clickActionsButton() {
+        WebElement actionsButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"font-size\"]/athena-action/p-button/button")));
+        actionsButton.click();
     }
 
     public boolean verifyActionExists(String action) {
-        String xpath;
+        String xpath = "";
         switch (action) {
             case "Candidate Report":
                 xpath = "//*[@id=\"p-tabpanel-0\"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[1]";
@@ -37,19 +74,22 @@ public class Implementation {
                 xpath = "//*[@id=\"p-tabpanel-0\"]/athena-placement-drives/div/div/div/p-table/div[2]/div/div[2]";
                 break;
             case "Evaluate Candidate":
-                // Since there's no XPath provided for this, we'll return false
-                return false;
-            default:
+                // No XPath provided for this action
                 return false;
         }
-        
         try {
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-            element.click();
+            WebElement actionElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+            actionElement.click();
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean verifyNavigation(String destination) {
+        // This is a placeholder. In a real implementation, you would check for elements
+        // specific to the destination page to confirm navigation.
+        return driver.getTitle().contains(destination);
     }
 
     public void closeBrowser() {

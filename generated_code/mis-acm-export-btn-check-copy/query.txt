@@ -1,0 +1,11 @@
+Scenario Outline:Manage Access Card : Export Options
+    When user navigates on "Access Card Management" and then "Manage Access Card"
+    When User click on export button
+    And User click on Copy option
+    And User click on Excel option
+    And User verifies if Excel "<filename>" got downloaded
+    And User click on Print button
+    And User verifies if Print"<filename>" works
+    Examples:
+      | filename     |
+      | Access Cards |

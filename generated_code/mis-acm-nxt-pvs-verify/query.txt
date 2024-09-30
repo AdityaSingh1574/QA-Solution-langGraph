@@ -1,0 +1,19 @@
+URL: https://mymis.geminisolutions.com/
+
+@regression @AccessCard @reg
+Feature: Access Card Management Features
+
+  Background: Login to MIS
+    Given Login to MIS with Username 'webadmin' and password 'Gemini@123'
+    When Click on Signin button
+    Then User should be navigated to MIS homepage
+
+  Scenario Out
+line: Manage Access Card : Verify paging functionality
+    When user navigates on "Access Card Management" and then "Manage Access Card"
+    And Verify Entries  changes to "<noOfRecords>" number of entries by selecting "<noOfRecords>" records from record selection drop down 
+    And Verify Next "Next" Button works
+    And Verify Previous "Previous" works
+    Examples:
+      | noOfRecords |
+      | 25          |

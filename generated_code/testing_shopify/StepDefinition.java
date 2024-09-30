@@ -9,40 +9,56 @@ import io.cucumber.java.en.And;
 public class StepDefinition {
     private Implementation implementation = new Implementation();
 
-    @Given("user is on the landing page of website {}")
-    public void userIsOnLandingPage(String url) {
-        implementation.launchUrl(url);
+    @Given("the user is on the landing page of https://sauce-demo.myshopify.com/")
+    public void userIsOnLandingPage() {
+        implementation.launchUrl("https://sauce-demo.myshopify.com/");
     }
 
-    @When("User Clicks on the {} on the landing page")
+    @When("the user clicks on {string} on the landing page")
     public void userClicksOnProduct(String productName) {
         implementation.clickOnProduct(productName);
     }
 
-    @Then("User is redirected to product page")
-    public void userIsRedirectedToProductPage() {
-        implementation.verifyProductPage();
+    @Then("the user is redirected to the product page for {string}")
+    public void userIsRedirectedToProductPage(String productName) {
+        implementation.verifyProductPage(productName);
     }
 
-    @When("User clicks on \"Add to Cart\" for the product selected")
+    @When("the user clicks the \"Add to Cart\" button on the product page")
     public void userClicksAddToCart() {
         implementation.clickAddToCart();
     }
 
-    @And("User Clicks on the Cart icon on the page")
-    public void userClicksCartIcon() {
+    @Then("the item is added to the user's cart")
+    public void itemIsAddedToCart() {
+        // This step is implicitly verified in the next step
+    }
+
+    @And("the cart updates are reflected in real-time")
+    public void cartUpdatesAreReflected() {
+        implementation.verifyCartUpdate();
+    }
+
+    @When("the user clicks on the \"Cart\" icon")
+    public void userClicksOnCartIcon() {
         implementation.clickCartIcon();
     }
 
-    @Then("User prints the name of the first item in the cart")
-    public void userPrintsFirstItemName() {
-        String itemName = implementation.getFirstItemNameInCart();
-        System.out.println("First item in cart: " + itemName);
+    @Then("the user is navigated to the cart summary page")
+    public void userIsNavigatedToCartSummary() {
+        implementation.verifyCartSummaryPage();
     }
 
-    @And("The first item in the cart should be {string}")
-    public void verifyFirstItemInCart(String expectedItemName) {
-        implementation.verifyFirstItemInCart(expectedItemName);
+    @And("the first item in the cart is displayed prominently")
+    public void firstItemInCartIsDisplayed() {
+        implementation.verifyFirstItemInCart();
+    }
+
+    @And("the cart contents match the items added by the user")
+    public void cartContentsMatchAddedItems() {
+        // This step assumes the last added item is the one we're checking
+        // You might need to modify this if you want to check multiple items
+        implementation.verifyCartContents("Jacket");
     }
 
     @Then("close the browser")

@@ -1,0 +1,7 @@
+Scenario Outline: User Card Mapping : Search functionality
+    When user navigates on "Access Card Management" and then "User Card Mapping"
+    And searching a "<Card Name>"card on search bar
+    Then Verify search function "<Card Name>"working by printing the first result name field
+    Examples:
+      | Card Name     |
+      | Akshi Khattar |

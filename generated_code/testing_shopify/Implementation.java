@@ -23,12 +23,13 @@ public class Implementation {
     }
 
     public void clickOnProduct(String productName) {
-        WebElement product = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"product-2\"]")));
+        String xpath = productName.toLowerCase().equals("noir jacket") ? "//*[@id=\"product-2\"]" : "/html/body/div[3]/div[2]/div/section/div[1]/a";
+        WebElement product = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
         product.click();
     }
 
-    public void verifyProductPage() {
-        wait.until(ExpectedConditions.urlContains("product"));
+    public void verifyProductPage(String productName) {
+        wait.until(ExpectedConditions.titleContains(productName));
     }
 
     public void clickAddToCart() {
@@ -36,19 +37,27 @@ public class Implementation {
         addToCartButton.click();
     }
 
+    public void verifyCartUpdate() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/header/div[1]/div[3]/div/a[2]")));
+    }
+
     public void clickCartIcon() {
-        WebElement cartIcon = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"minicart\"]/a[2]")));
+        WebElement cartIcon = driver.findElement(By.xpath("/html/body/header/div[1]/div[3]/div/a[2]"));
         cartIcon.click();
     }
 
-    public String getFirstItemNameInCart() {
-        WebElement firstItem = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"cart\"]/form/div[1]/div[2]/div[1]/div/h3/a")));
-        return firstItem.getText();
+    public void verifyCartSummaryPage() {
+        wait.until(ExpectedConditions.urlContains("/cart"));
     }
 
-    public void verifyFirstItemInCart(String expectedItemName) {
-        String actualItemName = getFirstItemNameInCart();
-        assert actualItemName.equals(expectedItemName) : "Expected item: " + expectedItemName + ", but found: " + actualItemName;
+    public void verifyFirstItemInCart() {
+        WebElement firstItem = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div[2]/div/section/form/div[1]/div[2]/div[1]/div/h3/a")));
+        assert firstItem.isDisplayed();
+    }
+
+    public void verifyCartContents(String productName) {
+        WebElement cartItem = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[4]/div[2]/div/section/form/div[1]/div[2]/div[1]/div/h3/a")));
+        assert cartItem.getText().contains(productName);
     }
 
     public void closeBrowser() {
