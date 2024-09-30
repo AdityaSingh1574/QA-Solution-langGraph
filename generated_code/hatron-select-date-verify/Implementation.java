@@ -14,15 +14,52 @@ public class Implementation {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    public void launchUrl() {
+    public void launchUrl(String url) {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+        driver.get(url);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("https://your-test-control-url.com"); // Replace with actual URL
     }
 
-    public void clickStartDateButton() {
+    public void selectEmailOption() {
+        WebElement loginOptionDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown")));
+        loginOptionDropdown.click();
+        WebElement emailOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]")));
+        emailOption.click();
+    }
+
+    public void enterEmail(String email) {
+        WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        emailInput.sendKeys(email);
+    }
+
+    public void enterPassword(String password) {
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input")));
+        passwordInput.sendKeys(password);
+    }
+
+    public void clickLoginButton() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button")));
+        loginButton.click();
+    }
+
+    public void clickHamburgerButton() {
+        WebElement hamburgerButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em")));
+        hamburgerButton.click();
+    }
+
+    public void clickTestsDropdown() {
+        WebElement testsDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a")));
+        testsDropdown.click();
+    }
+
+    public void selectTestControls() {
+        WebElement testControlsOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a")));
+        testControlsOption.click();
+    }
+
+    public void clickStartDateSelectionButton() {
         WebElement startDateButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"p-tabpanel-0\"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[2]/span/p-calendar/span/button")));
         startDateButton.click();
     }
@@ -32,7 +69,7 @@ public class Implementation {
         startDate.click();
     }
 
-    public void clickEndDateButton() {
+    public void clickEndDateSelectionButton() {
         WebElement endDateButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"p-tabpanel-0\"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[3]/span/p-calendar/span/button")));
         endDateButton.click();
     }
@@ -42,20 +79,9 @@ public class Implementation {
         endDate.click();
     }
 
-    public void verifyFilteredRecords() {
-        // Implement logic to verify that records are filtered
-        // This might involve checking if the table content has changed
-    }
-
-    public void verifyRecordsWithinDateRange() {
-        // Implement logic to verify that displayed records are within the selected date range
-        // This might involve parsing dates from the table and comparing them with selected range
-    }
-
-    public void verifyRecordCount() {
+    public boolean verifyFilteredRecords() {
         WebElement courseCounter = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"p-tabpanel-0\"]/athena-placement-drives/div/div/div/div[2]/div[1]/span")));
-        assert courseCounter.isDisplayed() : "Course counter is not displayed";
-        // You can add more assertions here to verify the count if needed
+        return courseCounter.isDisplayed();
     }
 
     public void closeBrowser() {

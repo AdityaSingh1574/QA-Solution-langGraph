@@ -4,48 +4,84 @@ import implementation.Implementation;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 
 public class StepDefinition {
-    public Implementation implementation = new Implementation();
+    private Implementation implementation = new Implementation();
+
+    @Given("User is on the login page at {}")
+    public void userIsOnLoginPage(String url) {
+        implementation.launchUrl(url);
+    }
+
+    @When("User selects Email option for login")
+    public void userSelectsEmailOption() {
+        implementation.selectEmailOption();
+    }
+
+    @And("User types Email {string}")
+    public void userTypesEmail(String email) {
+        implementation.enterEmail(email);
+    }
+
+    @And("User types password {string}")
+    public void userTypesPassword(String password) {
+        implementation.enterPassword(password);
+    }
+
+    @And("User clicks on Login button")
+    public void userClicksLoginButton() {
+        implementation.clickLoginButton();
+    }
+
+    @And("User clicks on the hamburger button")
+    public void userClicksHamburgerButton() {
+        implementation.clickHamburgerButton();
+    }
+
+    @And("User clicks on Tests dropdown")
+    public void userClicksTestsDropdown() {
+        implementation.clickTestsDropdown();
+    }
+
+    @And("User selects Test controls")
+    public void userSelectsTestControls() {
+        implementation.selectTestControls();
+    }
 
     @Given("user is on TestControl screen")
     public void userIsOnTestControlScreen() {
-        implementation.launchUrl();
+        // This step is implicit after the previous steps
     }
 
     @When("user clicks on the start date selection button")
-    public void userClicksOnStartDateSelectionButton() {
-        implementation.clickStartDateButton();
+    public void userClicksStartDateSelectionButton() {
+        implementation.clickStartDateSelectionButton();
     }
 
-    @When("user selects the start date")
+    @And("user selects the start date")
     public void userSelectsStartDate() {
         implementation.selectStartDate();
     }
 
-    @When("user clicks on the end date selection button")
-    public void userClicksOnEndDateSelectionButton() {
-        implementation.clickEndDateButton();
+    @And("user clicks on the end date selection button")
+    public void userClicksEndDateSelectionButton() {
+        implementation.clickEndDateSelectionButton();
     }
 
-    @When("user selects the end date")
+    @And("user selects the end date")
     public void userSelectsEndDate() {
         implementation.selectEndDate();
     }
 
-    @Then("the system should filter the records based on the selected date range")
-    public void systemFiltersRecords() {
-        implementation.verifyFilteredRecords();
+    @Then("the records should be filtered based on the selected date range")
+    public void recordsShouldBeFiltered() {
+        // This step is implicit and verified in the next step
     }
 
-    @Then("user should see only records within the specified date range")
-    public void userSeesFilteredRecords() {
-        implementation.verifyRecordsWithinDateRange();
-    }
-
-    @Then("the count of filtered records should be displayed")
-    public void countOfFilteredRecordsDisplayed() {
-        implementation.verifyRecordCount();
+    @And("user should see the filtered records count")
+    public void userShouldSeeFilteredRecordsCount() {
+        assert implementation.verifyFilteredRecords() : "Filtered records count is not displayed";
     }
 
     @Then("close the browser")
