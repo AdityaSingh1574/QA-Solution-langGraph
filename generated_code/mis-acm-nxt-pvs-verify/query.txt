@@ -8,9 +8,9 @@ Feature: Access Card Management Features
     When Click on Signin button
     Then User should be navigated to MIS homepage
 
-  Scenario Out
-line: Manage Access Card : Verify paging functionality
+  Scenario Out line: Manage Access Card : Verify paging functionality
     When user navigates on "Access Card Management" and then "Manage Access Card"
+    user is redirected to "Manage Access Card" page 
     And Verify Entries  changes to "<noOfRecords>" number of entries by selecting "<noOfRecords>" records from record selection drop down 
     And Verify Next "Next" Button works
     And Verify Previous "Previous" works
