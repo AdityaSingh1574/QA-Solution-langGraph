@@ -553,13 +553,14 @@ if __name__ == "__main__":
     app = initialize_graph()
 
     xpath_string = """
- {
+{
     "user name input"  : "/html/body/div[1]/div[1]/div/form/div[3]/input",
     "password input" : "/html/body/div[1]/div[1]/div/form/div[4]/input",
     "sign in button" : "/html/body/div[1]/div[1]/div/form/div[5]/div[2]/input",
     "Access card management dropdown" : "/html/body/nav/div/div[1]/ul/li[14]/span",
     "User card Management" : "/html/body/nav/div/div[1]/ul/li[14]/ul/li[2]/a",
-    "export button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[2]/a",
+    "Unmapped card history tab" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[1]/ul/li[2]/a",
+    "export button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[2]/section/div/div/div/section/div/div/div/div[2]/a",
     "copy button" : "/html/body/div[16]/a[1]",
     "excel button" : "/html/body/div[16]/a[2]"
 }
@@ -567,18 +568,19 @@ if __name__ == "__main__":
     
     user_story = """
     URL: https://mymis.geminisolutions.com/
-Scenario Outline:User Card Mapping :Mapped Cards : Export Options
+
+Scenario Outline:User Card Mapping :UnMapped Cards : Export Options
     When user navigates on "Access Card Management" and then "User Card Mapping"
-    When User click on export button
-    And User click on Copy option
-    And User click on Excel option
+    And User goes to Unmapped card history
+    When User click on export button two
+    And User click on Copy option two
+    And User click on Excel option two
     And User verifies if Excel "<filename>" got downloaded
-    And User click on Print button
+    And User click on Print button two
     And User verifies if Print"<filename>" works
     Examples:
       | filename          |
       | User Card Mapping |
-
 
     """
     
