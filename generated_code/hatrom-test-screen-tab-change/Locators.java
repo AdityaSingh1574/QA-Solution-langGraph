@@ -7,7 +7,7 @@ public class Locators {
         public static final By LOGIN_OPTION_DROPDOWN = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown");
         public static final By LOGIN_OPTION_EMAIL = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]");
         public static final By EMAIL_INPUT = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input");
-        public static final By PASSWORD_INPUT = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input");
+        public static final By PASSWORD_INPUT = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[3]/div/div/span/input");
         public static final By LOGIN_BUTTON = By.xpath("/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button");
     }
 

@@ -1,0 +1,9 @@
+{
+    "user name input"  : "/html/body/div[1]/div[1]/div/form/div[3]/input",
+    "password input" : "/html/body/div[1]/div[1]/div/form/div[4]/input",
+    "sign in button" : "/html/body/div[1]/div[1]/div/form/div[5]/div[2]/input",
+    "Access card management dropdown" : "/html/body/nav/div/div[1]/ul/li[14]/span",
+    "Manage card access" : "/html/body/nav/div/div[1]/ul/li[14]/ul/li[1]/a",
+    "search intput" : "/html/body/div[2]/div[1]/section/div/div[2]/section/div/div/div/div[3]/label/input",
+    "first search result"  : "/html/body/div[2]/div[1]/section/div/div[2]/section/div/div/div/table/tbody/tr/td[1]"
+}

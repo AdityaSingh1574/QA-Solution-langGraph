@@ -52,22 +52,46 @@ def get_user_story_from_description(epic_link):
     
     work_items_str = json.dumps(work_item_map, indent=4).replace('{', '{{').replace('}', '}}')
     
+    
+    logger.info("Descriptions and relations received from a")
+    
     WORK_ITEM_TO_FF = f"""
-    The Following are the descriptions of of Azure Tickets inside an EPIC given between `---DESCRIPTION-START---` and `---DESCRIPTION-END---`
+    
+
+    Given detailed descriptions of web development tasks, convert each description into a scenario outline for testing the user interactions on the specified website. Follow these guidelines:
+
+    The detailed description is given between `---DESCRIPTION-START---` and `---DESCRIPTION-END---`
+
     ---DESCRIPTION-START---
-    {work_items_str}
+     {work_items_str}
     ---DESCRIPTION-END---
+
     
-    Your task is to convert the above descriptions into a summary containing what series of steps need to be performed in order to complete the action  
-    You can follow the instructions given below for completing the task
-    1. Go through the description first and understand action that needs to be done for the test case
-    2. Divide the action to be performed into small steps, each containing a unit of action such as clicking a button, hovering, typing an input
-    3. Arrange the steps in a logical order through which the action can be completed
+    1. Identify the Website URL: Extract and highlight the website URL if mentioned, and use it as the base context for all scenarios.
+    2. Identify the overall action that has to be completed using the description1
+    2. Outline the User Journey: The descriptions must be consolidated into one summary containing all the necessary steps that need to be followed to complete the overall task that has to be completed, the steps must be neither too less nor too more.
+    3. Specify Actual Names and Identifiers:
+    - Clearly name any buttons, links, or placeholders mentioned in the description. Use quotes to denote the exact labels or text on these UI elements.
+    - If specific items are to be interacted with (like 'Noir Jacket' or 'Grey Jacket'), use these exact names in the scenario outline.
+    4. Include Examples for Multiple Cases: If the task involves multiple items or variations, include a table of examples at the end of the scenario. Each row should represent a different case, clearly listing any relevant specifics like item names.
+    5. Return only the summarization with the tasks, ignore adding anything additional like additional checks, etc 
     
-    Important instructions
-    1. Include the URLS given in the description
-    2. Do not add any names of the people assigned the tickets
-    3. return only the Summary and nothing else, the Summary must be contained between markers `---SUMMARY-START---` and `---SUMMARY-END---`
+    **Example Input**:
+    "Implement and test the user interaction on the landing page of https://sauce-demo.myshopify.com/ to ensure that when a user clicks on an item name (e.g., Noir Jacket, Grey Jacket), they are redirected to the respective product page. This involves adjusting the UI to make item names clickable and ensuring that the redirect functionality is correctly set up. Acceptance Criteria: Clicking on an item name on the landing page redirects to the product page. Ensure compatibility with major browsers (Chrome, Firefox, Safari). UI elements should be accessible and responsive."
+
+    **Example Output**:
+    Scenario outline: Perform item selection on https://sauce-demo.myshopify.com/
+    Given user is on the landing page of website https://sauce-demo.myshopify.com/
+    When user clicks on the <item-name> on the landing page
+    Then user is redirected to the product page
+    And ensure the page is compatible with major browsers like Chrome, Firefox, Safari
+    And UI elements are accessible and responsive
+    Examples:
+    | item-name   |
+    | Noir Jacket |
+    | Grey Jacket |
+
+    Apply these steps to convert detailed task descriptions into concise, structured scenario outlines for testing.
     """
     user_story_from_description = call_anthropic_model(
         prompt=WORK_ITEM_TO_FF
@@ -331,6 +355,11 @@ def code_translate_bro(messages_history, config):
         with open("feature_file.feature", 'r') as f:
             feature_file_text = f.read()
     
+        with open("Locators.java", 'r') as f:
+            locator_file_text = f.read()
+    
+        
+        
         TRANSLATION_PROMPT = """
         ---FEATURE-FILE-START---
         {feature_file_text}
@@ -346,14 +375,14 @@ def code_translate_bro(messages_history, config):
         4. Divide feature file big task into small steps / tasks and implement the functions for getting the steps done
         5. Implement all the functions in the implementation and step definition files for completing the task
 
-        use the following as locators as Xpaths for implementing the step definition file for accessing the element 
-        The Xpaths are given between `---XPATH-START---` and `---XPATH-END---`
+        use the following locator files text  for implementing the step definition file for accessing the element 
+        The Xpaths are given between `---LOCATOR-FILE-START---` and `---LOCATOR-FILE-END---`
 
-        ---XPATH-START---
-        {xpath_string}
-        ---XPATH-END---
+        ---LOCATOR-FILE-START---
+        {locator_file_text}
+        ---LOCATOR-FILE-END---
 
-
+y
         The following can be used as an example for a step definition file
         package stepdefinitions;
         import implementation.Implementation;
@@ -394,8 +423,10 @@ def code_translate_bro(messages_history, config):
         6. Keep the JAVA code for implementation file between separators `---IMPLEMENTATION-FILE-START---` and `---IMPLEMENTATION-FILE-END---`
         7. Keep the JAVA code for step-definition file between separators `---STEP-DEFINITION-FILE-START---` and `---STEP-DEFINITION-FILE-END---`
         8. Return only the JAVA code with the separators and nothing else.
+        9. include the package lines: package stepdefinitions and package implementations in relevant file codes
+        10. The class names have to be strictly the names : StepDefinition and Implementation in relevant file codes
         """
-        final_prompt = TRANSLATION_PROMPT.format(xpath_string=config['configurable']['x_path_string'], feature_file_text=feature_file_text)
+        final_prompt = TRANSLATION_PROMPT.format(locator_file_text=locator_file_text, feature_file_text=feature_file_text)
     
     
     
@@ -407,6 +438,24 @@ def code_translate_bro(messages_history, config):
     logger.info(f"Code Translation complete for : {config['configurable']['entry_point']}")
     
     java_code = llm_output
+    
+    
+    if config['configurable']['entry_point'] == "locator":
+        extracted_code_locator = extract_text_between_markers(java_code, "---JAVA-CODE---", "---JAVA-CODE---") 
+        with open("Locators.java", "w") as f:
+            f.write(extracted_code_locator)    
+    else:    
+        extracted_code_std = extract_text_between_markers(java_code, "---STEP-DEFINITION-FILE-START---", "---STEP-DEFINITION-FILE-END---")
+        extracted_code_imp = extract_text_between_markers(java_code, "---IMPLEMENTATION-FILE-START---", "---IMPLEMENTATION-FILE-END---")
+
+        
+        with open("StepDefinition.java", "w") as f:
+            f.write(extracted_code_std)
+        
+        with open("Implementation.java", "w") as f:
+            f.write(extracted_code_imp)
+    
+    
     return {"role" : "ai", "content" : java_code}
 
 
@@ -504,35 +553,29 @@ if __name__ == "__main__":
     app = initialize_graph()
 
     xpath_string = """
-{   
-    "login option drop down" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown",
-    "login option email" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[1]/div/div/p-dropdown/div/div[3]/div/ul/p-dropdownitem[1]",
-    "email input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input",
-    "password input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[2]/div/div/input",
-    "Login button input" : "/html/body/athena-root/div/athena-auth/athena-login/form/div/div[1]/div[2]/div[4]/button",
-    "hamburng button" : "/html/body/athena-root/div/athena-layout/div/div[1]/athena-header/p-toolbar/div/div[1]/em",
-    "Tests dropdown" : "/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[1]/a",
-    "Test Controls options" : "/html/body/athena-root/div/athena-layout/div/div[2]/div[1]/athena-sidemenu/p-sidebar/div/div[2]/p-panelmenu/div/div[2]/div[2]/div/p-panelmenusub/ul/li[1]/a",
-    "course dropdown buttom" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/span",
-    "dwt option" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/div[3]/div[2]/ul/p-dropdownitem[2]/li",
-    "Php Mysql option" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/p-table/div/div[1]/div/div[1]/span/p-dropdown/div/div[3]/div[2]/ul/p-dropdownitem[3]/li",
-    "records counter" : "//*[@id="p-tabpanel-0"]/athena-placement-drives/div/div/div/div[2]/div[1]/span"
-}
+    {
+    "user name input"  : "/html/body/div[1]/div[1]/div/form/div[3]/input",
+    "password input" : "/html/body/div[1]/div[1]/div/form/div[4]/input",
+    "sign in button" : "/html/body/div[1]/div[1]/div/form/div[5]/div[2]/input",
+    "Access card management dropdown" : "/html/body/nav/div/div[1]/ul/li[14]/span",
+    "User card Management" : "/html/body/nav/div/div[1]/ul/li[14]/ul/li[2]/a",
+    "entry selection drop down" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[1]/label/select",
+    "selected entry 25 option" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[1]/label/select/option[2]",
+    "next button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[5]/ul/li[9]/a",
+    "previous button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[1]/section/div/div/div[2]/section/div/div/div/div[5]/ul/li[1]/a"
+    }
     """
     
     user_story = """
-Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
-            User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
-            User types password : 'Siva@123' and clicks on Login button
-            User clicks on the hanmburger button
-            User Clicks on Tests dropdown
-            user selects Test controls 
-Scenario: Hartron TestControl Filter Course Verify Course Details Are Displayed
-    Given user is on TestControl screen
-    When filter course values by clicking on the coures drop down and selecting <course-name>
-    Then verify if records are filtered based on total records by printing the records count in the counter
-    
-
+    Scenario Out
+line: Manage Access Card : Verify paging functionality
+    When user navigates on "Access Card Management" and then "Manage Access Card"
+    And Verify Entries  changes to "<noOfRecords>" number of entries by selecting "<noOfRecords>" from the dropdown 
+    And Verify Next "Next" Button works
+    And Verify Previous "Previous" works
+    Examples:
+      | noOfRecords |
+      | 25          |
     """
     
     epic_link = ""
@@ -541,19 +584,10 @@ Scenario: Hartron TestControl Filter Course Verify Course Details Are Displayed
         user_story = get_user_story_from_description(epic_link)
     
     
+    print(user_story)
+    
+    
     locator_text, step_def_text = generate_test_cases(app,xpath_string,user_story)
     
-    extracted_code_locator = extract_text_between_markers(locator_text, "---JAVA-CODE---", "---JAVA-CODE---") 
-    extracted_code_std = extract_text_between_markers(step_def_text, "---STEP-DEFINITION-FILE-START---", "---STEP-DEFINITION-FILE-END---")
-    extracted_code_imp = extract_text_between_markers(step_def_text, "---IMPLEMENTATION-FILE-START---", "---IMPLEMENTATION-FILE-END---")
-
-    
-    with open("Locators.java", "w") as f:
-        f.write(extracted_code_locator)
-        
-    with open("StepDefinition.java", "w") as f:
-        f.write(extracted_code_std)
-    
-    with open("Implementation.java", "w") as f:
-        f.write(extracted_code_imp)
+   
     

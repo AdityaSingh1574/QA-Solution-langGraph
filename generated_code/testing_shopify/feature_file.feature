@@ -1,20 +1,28 @@
-Feature: Add to Cart on https://sauce-demo.myshopify.com/
-As a user, I want to add items to my cart on the Sauce Demo Shopify website
+Feature: Complete Shopping Journey on https://sauce-demo.myshopify.com/
+  As a user
+  I want to select a product, add it to my cart, and review the cart
+  So that I can complete a purchase
 
-Scenario: Add Noir jacket to Cart
-    Given user is on the landing page of website https://sauce-demo.myshopify.com/
-    When User Clicks on the Noir jacket on the landing page
-    Then User is redirected to product page
-    When User clicks on "Add to Cart" for the product selected
-    And User Clicks on the Cart icon on the page
-    Then User prints the name of the first item in the cart
-    And The first item in the cart should be "Noir jacket"
+  Scenario: Complete shopping journey with Noir Jacket
+    Given the user is on the landing page of https://sauce-demo.myshopify.com/
+    When the user clicks on "Noir Jacket" on the landing page
+    Then the user is redirected to the product page for "Noir Jacket"
+    When the user clicks the "Add to Cart" button on the product page
+    Then the item is added to the user's cart
+    And the cart updates are reflected in real-time
+    When the user clicks on the "Cart" icon
+    Then the user is navigated to the cart summary page
+    And the first item in the cart is displayed prominently
+    And the cart contents match the items added by the user
 
-Scenario: Add Grey jacket to Cart
-    Given user is on the landing page of website https://sauce-demo.myshopify.com/
-    When User Clicks on the Grey jacket on the landing page
-    Then User is redirected to product page
-    When User clicks on "Add to Cart" for the product selected
-    And User Clicks on the Cart icon on the page
-    Then User prints the name of the first item in the cart
-    And The first item in the cart should be "Grey jacket"
+  Scenario: Complete shopping journey with Grey Jacket
+    Given the user is on the landing page of https://sauce-demo.myshopify.com/
+    When the user clicks on "Grey Jacket" on the landing page
+    Then the user is redirected to the product page for "Grey Jacket"
+    When the user clicks the "Add to Cart" button on the product page
+    Then the item is added to the user's cart
+    And the cart updates are reflected in real-time
+    When the user clicks on the "Cart" icon
+    Then the user is navigated to the cart summary page
+    And the first item in the cart is displayed prominently
+    And the cart contents match the items added by the user
