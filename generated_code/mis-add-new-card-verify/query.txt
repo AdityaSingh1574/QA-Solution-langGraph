@@ -8,7 +8,8 @@ Feature: Access Card Management Features
     When Click on Signin button
     Then User should be navigated to MIS homepage
 Scenario Outline: Manage Access Card : Add New Access Card
-    When user navigates on "Access Card Management" and then "Manage Access Card"
+    When user navigates on "Access Card Management" and then "Manage Access Card" on : https://mymis.geminisolutions.com
+    redirect to : https://mymis.geminisolutions.com/AccessCard/UserCardMapping
     And User adds new "<Card Number>"Access card by clicking on the "add new card" then typing the "<card number>" and toggling temporary card and the clicking Add button
     Then Verify Card Added successfully
     Examples:

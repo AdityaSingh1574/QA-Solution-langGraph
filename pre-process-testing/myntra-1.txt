@@ -1,0 +1,8 @@
+Scenario Outline : User searches for "shoes", adds it to card and confirms
+    User is at https://www.myntra.com and searches for "shoes"
+    redirected to : https://www.myntra.com/shoes?rawQuery=shoes
+    User Selects the first shoe 
+    redirected : https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy
+    User clicks on Add to cart and the moves to cart
+    redirected to : https://www.myntra.com/checkout/cart
+    User clicks on place order

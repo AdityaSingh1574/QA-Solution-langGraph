@@ -12,6 +12,8 @@ from json_repair import repair_json
 import autogen
 from autogen.coding import LocalCommandLineCodeExecutor
 from azure_summarizer import get_work_description
+from redirection_url_finder import redirection_url_finder
+from xpath_generator import get_raw_xpath_dictionary
 
 config_list = [ {
         "model": "claude-3-5-sonnet",
@@ -545,6 +547,19 @@ def extract_text_between_markers(input_text, start_marker, end_marker):
 
     # Extracting the text between the markers
     return input_text[start_index:end_index].strip()
+
+
+
+
+
+
+def preprocessing(user_story):
+    
+    action_url_dict = redirection_url_finder(user_story)
+    
+    for action, url in action_url_dict.items():
+        xpath_dict = 
+        
 
 
 
