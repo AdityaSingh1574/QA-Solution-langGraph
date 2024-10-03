@@ -72,11 +72,7 @@ def create_xpaths_from_page_source(html_doc):
     soup = BeautifulSoup(html_doc, "html.parser")
 
     # List of tags to parse
-<<<<<<< HEAD:xpath_generator.py
-    tags = ["button", "span", "div", "input", "li", "label", "a"]
-=======
     tags = ["a","button", "span", "div", "input", "li", "label"]
->>>>>>> 5fd8dede64907b43bb8d7979c0ab1d2b010268a3:utils/xpath_generator.py
     high_priority_tags = ["button", "a"]
 
     # Create an ordered dictionary to store xpaths
@@ -157,13 +153,9 @@ def key_name(element, index):
         key = snake_case_convertor(element.get("aria-label"))
     elif element.get("placeholder"):
         key = snake_case_convertor(element.get("placeholder"))
-<<<<<<< HEAD:xpath_generator.py
-
-=======
     elif element.get("onclick"):
         key = snake_case_convertor(element.get("onclick"))
     
->>>>>>> 5fd8dede64907b43bb8d7979c0ab1d2b010268a3:utils/xpath_generator.py
     if element.name == "a":
         key = key + "_link" if key else "delete_this_node_37" + str(index)
     else:

@@ -112,26 +112,17 @@ def xpath_segregator(action, element_xpaths):
 
 # if __name__ == "__main__":
     
-<<<<<<< HEAD:xpath_segregation.py
-    url =  "https://www.amazon.in"
-=======
 #     url =  "https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy"
 #     action_type = "No-Login"
 #     xpaths_raw = get_raw_xpath_dictionary(url,action_type)
->>>>>>> 5fd8dede64907b43bb8d7979c0ab1d2b010268a3:utils/xpath_segregation.py
     
 #     action = "Click on 'Add to cart' button and then click on 'Go to cart' or 'Cart' button"
 #     seg_xpaths = xpath_segregator(action, xpaths_raw)
     
-<<<<<<< HEAD:xpath_segregation.py
-    action = "user selects amazon pharmacy from a dropdown"
-    seg_xpaths = xpath_segregator(action, xpaths_raw)
-=======
 #     print("Segregated Xpaths : \n")
 #     print(
 #         json.dumps(seg_xpaths, indent=4)
 #     )
->>>>>>> 5fd8dede64907b43bb8d7979c0ab1d2b010268a3:utils/xpath_segregation.py
     
 #     filtered_xpaths = filter_xpaths(seg_xpaths, xpaths_raw)
     
