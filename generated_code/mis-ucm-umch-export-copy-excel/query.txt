@@ -1,5 +1,6 @@
 Scenario Outline:User Card Mapping :UnMapped Cards : Export Options
-    When user navigates on "Access Card Management" and then "User Card Mapping"
+    When user navigates on "Access Card Management" and then "User Card Mapping" at : https://mymis.geminisolutions.com
+    redirect : https://mymis.geminisolutions.com/AccessCard/UserCardMapping
     And User goes to Unmapped card history
     When User click on export button two
     And User click on Copy option two
@@ -9,4 +10,4 @@ Scenario Outline:User Card Mapping :UnMapped Cards : Export Options
     And User verifies if Print"<filename>" works
     Examples:
       | filename          |
-      | User Card Mapping |
+      | financial scewup |

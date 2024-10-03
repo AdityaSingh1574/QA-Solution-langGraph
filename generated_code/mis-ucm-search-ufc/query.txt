@@ -1,8 +1,9 @@
 Scenario Outline:  User Card Mapping : Unfinalize Card Mapping
-    When user navigates on "Access Card Management" and then "User Card Mapping"
+    When user navigates on "Access Card Management" and then "User Card Mapping" on page : 
+    user is  redirected to the page :  https://mymis.geminisolutions.com/AccessCard/UserCardMapping
     And searching a "<Card Name>"card by typing the <Card Name> in the search input
     And user Unfinalize Card Mapping by clicking on additional options and then clicking Unfinalize
     Then Verify Mapping unfinalized
     Examples:
       | Card Name     |
-      | user |
+      | user          |
