@@ -1,11 +1,10 @@
 from utils.llm_call import call_anthropic_model,call_aws_bedrock_llm
 from json_repair import repair_json
 import json
-import os
-import time
+from logger import logger
+
+
 # TODO: need to test llama-3-170b for this task
-
-
 
 ACTION_REDIRECTION_LINK = """
 You will be given a set of instructions as an input, these are the instructions directing to perform an action on a website, the instructions follow a pattern of performing action on webpage and then getting redirected to another page after performing a certain action on the webpage, along with this the instructions shall also contain the url of the landing page and urls of the all the pages to which we are redirected to.
@@ -23,15 +22,18 @@ You need to follow the below instructions for completing the task:
 1. First go through the task description and understand where all redirection is taking place, in the task description it is specifically mentioned when and where the redirection is taking place.
 2. Identify the actions taking on different webpages, you can segregate the actions taking place on different webpages by keeping a note of actions taking place before every redirection
 3. While specifying the actions precisely include the action (eg- clicked, typed etc) and the name of the element in which action is performed (eg- button name, search bar name etc).
+4. classify the action as  `Login` or `No-Login`, this will be based on fact if the action of authentication or logging in to website is being done or not, if there is an action of logging in then assign it as `Login` else assign `No-Login` 
 5. The keywords mentioned in between the brackets < and > are variables keep them as it is while specifying in actions. 
 6. Once the actions and the URLs are identified, then arrange the webpage actions against the URLs for that webpage
 
 Important Instructions:
 1. The actions must be mapped to the webpage URL on which the actions are taking place
-2. Return only JSON and nothing else, the json will have the following format
+2. Assume some actions to be obvious eg: when action is search then next step would be to press enter, when action is adding the new entry then final step would be clicking a final add button, when some item is to be selected from a dropdown first click on the dropdown etc, if action is of putting the credentials then first step is to type the login id / email id and then type password in input fields and then click on login or sign in, etc.
+3. Add the Assumed action to the webpage action key for stream lining the process.
+4. Return only JSON and nothing else, the json will have the following format
 {{
-    <webpage-actions-1> : <URL-of-webpage-1>,
-    <webpage-actions-2> : <URL-of-webpage-2>
+    <webpage-actions-1> : {{"action_type" : <Login or No-Login>  , "url" : <URL-of-webpage-1>}},
+    <webpage-actions-2> : {{"action_type" : <Login or No-Login>  , "url" : <URL-of-webpage-2>}}
 }}   
 
 You can use the following example for understanding the same:
@@ -94,25 +96,35 @@ def redirection_url_finder(task_description):
     base_json_str = repair_json(base_json_str)
     base_json = json.loads(base_json_str)
     
-    print("base json : \n",
-        json.dumps(base_json, indent=4)
-    )
+    logger.info(f"base json : \n{json.dumps(base_json, indent=4)}")
     
     base_json_extend_prompt = VARIABLE_NAME_REPLACE_PROMPT.format(task_description=task_description,json=base_json_str)
     
     extended_json_list_str = call_anthropic_model(
         prompt=base_json_extend_prompt
-    )
-    
-    
-    print(extended_json_list_str)
-    
+    )    
     
     extended_json_list_str = repair_json(extended_json_list_str)
     extended_json_list = json.loads(extended_json_list_str)
     
-    print("Extended JSON : \n",
-        json.dumps(extended_json_list, indent=4)
-    )
+    logger.info(f"Extended JSON : \n{json.dumps(extended_json_list, indent=4)}")
     
     return extended_json_list
+
+
+# if __name__ == "__main__":
+    
+#     td = """
+#     Scenario Outline : User searches for "shoes", adds it to card and confirms
+#     User is at https://www.myntra.com and searches for "shoes"
+#     redirected to : https://www.myntra.com/shoes?rawQuery=shoes
+#     User Selects the first shoe 
+#     redirected : https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy
+#     User clicks on Add to cart and the moves to cart
+#     redirected to : https://www.myntra.com/checkout/cart
+#     User clicks on place order
+#     """
+    
+#     extended = redirection_url_finder(td)
+    
+    

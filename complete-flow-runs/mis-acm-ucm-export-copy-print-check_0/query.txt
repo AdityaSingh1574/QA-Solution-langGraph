@@ -1,0 +1,16 @@
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@123' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Search Outline : User test export, copy and print button
+User navigates to "Access Card management" and then User card Mapping
+redirect to : https://mymis.geminisolutions.com/AccessCard/UserCardMapping
+When User click on export button
+And User click on Copy option
+And User click on Excel option
+And User verifies if Excel "<filename>" got downloaded
+And User click on Print button
+And User verifies if Print"<filename>" works
+Examples:
+| filename          |
+| Access Cards      |

@@ -3,7 +3,7 @@ Background: User Selects Email option for login at https://athena-hartron-dev.ge
             User types password : 'Siva@123' and clicks on Login button
             User clicks on the hanmburger button
             User Clicks on Tests dropdown
-            user selects Test controls 
+    user selects Test controls 
 Scenario: Hartron TestControl Search By Name/Tag Verify Records
     Given user is on TestControl screen
     When enter search text in Search by <course-name>

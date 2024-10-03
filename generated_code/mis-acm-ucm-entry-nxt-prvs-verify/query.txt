@@ -1,5 +1,4 @@
-Scenario Out
-line: Manage Access Card : Verify paging functionality
+Scenario Out line: Manage Access Card : Verify paging functionality
     When user navigates on "Access Card Management" and then "Manage Access Card"
     And Verify Entries  changes to "<noOfRecords>" number of entries by selecting "<noOfRecords>" from the dropdown 
     And Verify Next "Next" Button works
