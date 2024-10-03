@@ -9,11 +9,31 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
-
 import time
-from selenium.webdriver.support import expected_conditions as EC
+from logger import logger
+# TODO : import hashlib # Uncomment and replace this with file name function once testing is complete
+import re
 
-def open_url(url):
+# TODO : Uncomment and replace this with file name function once testing is complete
+# def normalize_url_to_filename(url):
+#     """Normalize the URL to a safe filename by hashing."""
+#     return hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
+
+
+def give_cache_file_name(url):
+    
+    # Remove the protocol
+    file_name = re.sub(r'^https?:\/\/', '', url)
+    # Remove www if it exists
+    file_name = re.sub(r'^www\.', '', file_name)
+    # Replace special characters that are not allowed in filenames
+    file_name = re.sub(r'[\/\?%*:|"<>]', '_', file_name)
+    # Cut off parameters after an ampersand if any
+    file_name = re.sub(r'\&.*', '', file_name)
+    return file_name + '.json'
+
+
+def open_url(url, action_type):
     html_doc = None
 
     # Use Selenium to load the page with JavaScript execution
@@ -23,18 +43,20 @@ def open_url(url):
 
     driver = webdriver.Firefox(service=service, options=firefox_options)
 
-    # the below code allows the user to login with credentials
-    
     driver.get(url)
-    #  Inject a JavaScript alert to prompt the user for manual login
-    # TODO : Fix this >> alert is not being displayed    
-    
-    driver.get(url)
-    # time.sleep(10)
-    
-    
+    logger.info("waiting for loading webpage properly")
+    time.sleep(5)
     driver.maximize_window()
-
+    
+    # TODO : if action_type == "Login" then dont bypass Login : for getting the source code of login page.
+    
+    # waiting for manual login
+    logger.warning("WAITING FOR MANUAL LOGIN")
+    time.sleep(30)
+    
+    # changing to the page where we wanna go 
+    driver.get(url)
+    time.sleep(8)
     # Wait until the page is fully loaded
     WebDriverWait(driver, 60).until(
         lambda d: d.execute_script("return document.readyState") == "complete"
@@ -42,7 +64,7 @@ def open_url(url):
 
     html_doc = driver.page_source
     driver.quit()
-    print("HTML extracted successfully")
+    logger.info("Source code extracted successfully")
     return html_doc
 
 
@@ -50,8 +72,8 @@ def create_xpaths_from_page_source(html_doc):
     soup = BeautifulSoup(html_doc, "html.parser")
 
     # List of tags to parse
-    tags = ["button", "span", "div", "input", "li", "label"]
-    high_priority_tags = ["button", "input"]
+    tags = ["a","button", "span", "div", "input", "li", "label"]
+    high_priority_tags = ["button", "a"]
 
     # Create an ordered dictionary to store xpaths
     xpath_dictionary = OrderedDict()
@@ -129,7 +151,11 @@ def key_name(element, index):
         key = snake_case_convertor(element.string)
     elif element.get("aria-label"):
         key = snake_case_convertor(element.get("aria-label"))
-
+    elif element.get("placeholder"):
+        key = snake_case_convertor(element.get("placeholder"))
+    elif element.get("onclick"):
+        key = snake_case_convertor(element.get("onclick"))
+    
     if element.name == "a":
         key = key + "_link" if key else "delete_this_node_37" + str(index)
     else:
@@ -174,17 +200,37 @@ def snake_case_convertor(raw_string):
 
     return words.replace(" ", "_")
 
-def get_raw_xpath_dictionary(url):
+def fetch_raw_xpath_dictionary(url,action_type):
 
-    html_doc = open_url(url)
+    html_doc = open_url(url, action_type)
 
     # Generate xpaths
     xpath_dictionary = create_xpaths_from_page_source(html_doc)
+    logger.info("Generated Priority Xpaths for all elements")
 
     # Clean and write the xpaths to a JSON file
     xpath_dict = clean_generated_xpaths(xpath_dictionary)
-    
-    with open("extracted_xpaths.json","w") as f:
-        json.dump(xpath_dict, f, indent=4)
-    
+    logger.info("Cleaned xpaths without intuitive names")
     return xpath_dict
+
+
+def get_raw_xpath_dictionary(url,action_type):
+    filename = give_cache_file_name(url)
+    cache_path = os.path.join('xpath_cache', filename)
+
+    logger.info(f"cache file name : {filename}")
+    
+    # Check if cached data exists
+    if os.path.exists(cache_path):
+        logger.info(f"Loading cached data for {url}") 
+        with open(cache_path, 'r') as file:
+            return json.load(file)
+    
+    # If no cache, fetch and save the data
+    logger.info(f"Fetching data for {url}")  
+    data = fetch_raw_xpath_dictionary(url, action_type)
+    os.makedirs('xpath_cache', exist_ok=True)  
+    with open(cache_path, 'w') as file:
+        json.dump(data, file,indent=4)
+    
+    return data

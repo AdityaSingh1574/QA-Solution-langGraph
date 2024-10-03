@@ -14,6 +14,9 @@ from autogen.coding import LocalCommandLineCodeExecutor
 from azure_summarizer import get_work_description
 from redirection_url_finder import redirection_url_finder
 from xpath_generator import get_raw_xpath_dictionary
+from xpath_segregation import xpath_segregator
+from json_repair import repair_json
+
 
 config_list = [ {
         "model": "claude-3-5-sonnet",
@@ -59,8 +62,7 @@ def get_user_story_from_description(epic_link):
     
     WORK_ITEM_TO_FF = f"""
     
-
-    Given detailed descriptions of web development tasks, convert each description into a scenario outline for testing the user interactions on the specified website. Follow these guidelines:
+    You will be given detailed descriptions of development tasks, convert each description into a scenario outline for testing the user interactions on the specified website. 
 
     The detailed description is given between `---DESCRIPTION-START---` and `---DESCRIPTION-END---`
 
@@ -68,7 +70,7 @@ def get_user_story_from_description(epic_link):
      {work_items_str}
     ---DESCRIPTION-END---
 
-    
+    You need to follow the below instructions for completing the task:
     1. Identify the Website URL: Extract and highlight the website URL if mentioned, and use it as the base context for all scenarios.
     2. Identify the overall action that has to be completed using the description1
     2. Outline the User Journey: The descriptions must be consolidated into one summary containing all the necessary steps that need to be followed to complete the overall task that has to be completed, the steps must be neither too less nor too more.
@@ -79,19 +81,14 @@ def get_user_story_from_description(epic_link):
     5. Return only the summarization with the tasks, ignore adding anything additional like additional checks, etc 
     
     **Example Input**:
-    "Implement and test the user interaction on the landing page of https://sauce-demo.myshopify.com/ to ensure that when a user clicks on an item name (e.g., Noir Jacket, Grey Jacket), they are redirected to the respective product page. This involves adjusting the UI to make item names clickable and ensuring that the redirect functionality is correctly set up. Acceptance Criteria: Clicking on an item name on the landing page redirects to the product page. Ensure compatibility with major browsers (Chrome, Firefox, Safari). UI elements should be accessible and responsive."
+    "Implement and test the user interaction on the landing page of https://sauce-demo.myshopify.com/ to ensure that when a user clicks on an item name (e.g., Noir Jacket : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket ), they are redirected to the respective product page. This involves adjusting the UI to make item names clickable and ensuring that the redirect functionality is correctly set up. Acceptance Criteria: Clicking on an item name on the landing page redirects to the product page. Ensure compatibility with major browsers (Chrome, Firefox, Safari). UI elements should be accessible and responsive."
 
     **Example Output**:
     Scenario outline: Perform item selection on https://sauce-demo.myshopify.com/
     Given user is on the landing page of website https://sauce-demo.myshopify.com/
-    When user clicks on the <item-name> on the landing page
-    Then user is redirected to the product page
-    And ensure the page is compatible with major browsers like Chrome, Firefox, Safari
-    And UI elements are accessible and responsive
-    Examples:
-    | item-name   |
-    | Noir Jacket |
-    | Grey Jacket |
+    When user clicks on the 'Noir Jacket' on the landing page
+    Then user is redirected to the product page : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket
+
 
     Apply these steps to convert detailed task descriptions into concise, structured scenario outlines for testing.
     """
@@ -230,36 +227,39 @@ def user_story_converter(messages, config):
     
     
     USER_STORY_CONVERSION_PROMPT="""
-    Your task is to create a gherkin syntax which includes all the scenarios possible for the given feature.Consider the given below notes for the task.
-    1. go through the given text between the separators `---USER-STORY-START---` and `---USER-STORY-END---`
-    2. the placeholders are given between < and > and need to be filled with the values given in the  `Examples` section    
-    3. the `Examples` section contains the values to be filled in the placeholders
-    4. fill the values in the placeholders for each value given in the  `Examples` section
-    5. generate a gherkin syntax for each example 
+    You will be given a set of instructions for completing an action or a set of actions on a website, the description shall contain actions performed on web elements, whose names will be mentioned in the description
+    Your task is to create a feature file in gherkin syntax which will be used for performing Automation testing on the website by performing these actions on different web pages.    
 
-    The following is the user-story:
-    ---USER-STORY-START---
+    The following is the TASK-DESCRIPTION given between `---TASK-DESCRIPTION-START---` and `---TASK-DESCRIPTION-END---`:
+    ---TASK-DESCRIPTION-START---
     {user_story}
-    ---USER-STORY-END---
+    ---TASK-DESCRIPTION-END---
+
+    You need to follow the below instruction for completing the task:
+    1. go through the given task description between the separators `---TASK-DESCRIPTION-START---` and `---TASK-DESCRIPTION-END---`
+    2. Identify the names of the elements in each of the instructions and the particular actions associated with each of the elements
+    3. Break the instructions in a way that for each line in the feature file one action and one element is covered
+    4. for every broken down instruction convert the instruction into gherkin syntax 
+    5. Include only the first URL given in the instructions,  for the rest which infer redirection from one webpage to another include a line in gherkn syntax which infers about redirection. 
 
     Important instructions
     1. Do not return anything other than the gherkin syntax
-
-    the following is an example of how this can be done 
+    2. Make use of the word `User` for specifying user in the feature file
+    3. If the actions specify log-in/authentication and then performing other actions the segregate the authentication part in Background part of feature file
+    4. If no Examples are given the return the gherkin syntax for whatever value is given
+    
+    The following is an example of how this can be done 
 
     Sample Input:
     URL: https://www.amazon.in/ 
 
     Feature: Add Books in the cart from Amazon
 
-    Scenario Outline: Search <SearchOption> From Amazon website
-    Given user Search <SearchOption> in the Search Box
-    And user add First <SearchOption> in the cart
+    Scenario Outline: Search 'book' From Amazon website
+    Given user Search 'book' in the Search Box
+    And user add First 'book' in the cart
     When user add item to the cart
-    Examples:
-    | SearchOption |
-    | Book         |
-    | Shoes        |
+
 
     The output for the above will be as follows:
 
@@ -272,17 +272,6 @@ def user_story_converter(messages, config):
         And user selects the first 'Book' from the search results
         And user clicks on 'Add to Cart' button
         Then the 'Book' should be added to the user's cart
-        And the cart count should increase by 1
-
-    Scenario: Search and Add Shoes to Cart
-        Given user is on the Amazon homepage
-        When user searches for 'Shoes' in the search box
-        And user selects the first 'Shoes' from the search results
-        And user selects the desired size and color
-        And user clicks on 'Add to Cart' button
-        Then the 'Shoes' should be added to the user's cart
-        And the cart count should increase by 1
-
     """
 
     final_prompt = USER_STORY_CONVERSION_PROMPT.format(user_story=user_story)
@@ -294,9 +283,9 @@ def user_story_converter(messages, config):
     
     
     feature_file_text = llm_output
-    
+    dir_path = config['configurable']['dir_path']
     logger.info("Feature file text generated and Saved in current directory")
-    with open('feature_file.feature', 'w') as f:
+    with open(f'{dir_path}//feature_file.feature', 'w') as f:
         f.write(feature_file_text)
     
     PYTHON_CODE_GEN_PROMPT = """
@@ -353,11 +342,13 @@ def code_translate_bro(messages_history, config):
     
     final_prompt = TRANSLATION_PROMPT.format(python_code=python_code)
     
+    dir_path = config['configurable']['dir_path']
+    
     if config['configurable']['entry_point'] == 'step_imp':
-        with open("feature_file.feature", 'r') as f:
+        with open(f"{dir_path}//feature_file.feature", 'r') as f:
             feature_file_text = f.read()
     
-        with open("Locators.java", 'r') as f:
+        with open(f"{dir_path}//Locators.java", 'r') as f:
             locator_file_text = f.read()
     
         
@@ -441,38 +432,25 @@ y
     
     java_code = llm_output
     
+    dir_path = config['configurable']['dir_path'] 
     
     if config['configurable']['entry_point'] == "locator":
         extracted_code_locator = extract_text_between_markers(java_code, "---JAVA-CODE---", "---JAVA-CODE---") 
-        with open("Locators.java", "w") as f:
+        with open(f"{dir_path}//Locators.java", "w") as f:
             f.write(extracted_code_locator)    
     else:    
         extracted_code_std = extract_text_between_markers(java_code, "---STEP-DEFINITION-FILE-START---", "---STEP-DEFINITION-FILE-END---")
         extracted_code_imp = extract_text_between_markers(java_code, "---IMPLEMENTATION-FILE-START---", "---IMPLEMENTATION-FILE-END---")
 
         
-        with open("StepDefinition.java", "w") as f:
+        with open(f"{dir_path}//StepDefinition.java", "w") as f:
             f.write(extracted_code_std)
         
-        with open("Implementation.java", "w") as f:
+        with open(f"{dir_path}//Implementation.java", "w") as f:
             f.write(extracted_code_imp)
     
     
     return {"role" : "ai", "content" : java_code}
-
-
-
-
-
-def display_graph(app):
-        
-    try:
-        display(Image(app.get_graph().draw_mermaid_png()))
-    except Exception:
-        # This requires some extra dependencies and is optional
-        pass
-    
-    
 
 
 def initialize_graph():
@@ -519,12 +497,11 @@ def generate_code_for_file(app,config):
     
     return code[-1].content
 
-def generate_test_cases(app,xpath_string, user_story):
+def generate_test_cases(app,xpath_string, user_story,dir_path):
     # 4. Invoke the app
 
-    locator_config = {"configurable": {"thread_id": "1", "entry_point" : "locator" , "x_path_string" : xpath_string} }
-    step_def_imp_config =  {"configurable": {"thread_id": "2", "entry_point" : "step_imp", "x_path_string": xpath_string, "user_story_string" : user_story}}
-    
+    locator_config = {"configurable": {"thread_id": "1", "entry_point" : "locator" , "x_path_string" : xpath_string, "dir_path" : dir_path}}
+    step_def_imp_config =  {"configurable": {"thread_id": "2", "entry_point" : "step_imp", "x_path_string": xpath_string, "user_story_string" : user_story, "dir_path" : dir_path}}    
     
     locator_code = generate_code_for_file(app, locator_config)
     
@@ -549,65 +526,85 @@ def extract_text_between_markers(input_text, start_marker, end_marker):
     return input_text[start_index:end_index].strip()
 
 
-
-
-
-
 def preprocessing(user_story):
-    
-    action_url_dict = redirection_url_finder(user_story)
-    
-    for action, url in action_url_dict.items():
-        xpath_dict = 
-        
 
+
+
+    
+    logger.info("pre-processing started")
+    
+    action_url_dict_list = redirection_url_finder(user_story)
+    
+    logger.info("Redirection URLs extracted from User Story")
+    
+    refined_user_story_list = []
+    preprocessed_xpath_input_list = []
+    
+    for index,action_url_dict in enumerate(action_url_dict_list):
+        refined_user_story = ""
+        preprocessed_xpath_input = {}
+        logger.info("Xpath extraction and segregation for User Story Data : {index}".format(index=index + 1))
+        for action, value in action_url_dict.items():
+            action_type = value["action_type"]
+            url = value["url"]
+            
+            logger.info(f"Action Type : {action_type}")
+            logger.info(f"Refined Action : {action}")
+            logger.info(f"extracted URL : {url}")
+            
+            xpath_dict = get_raw_xpath_dictionary(url,action_type)
+            seg_xpaths = xpath_segregator(action, xpath_dict)
+            
+            if action_type == "Login":
+                refined_user_story += f"Backgroud : {action} \nredirect to : {url} \n"
+            else:
+                refined_user_story += f"{action} \nredirect to : {url} \n"
+                            
+            preprocessed_xpath_input.update(seg_xpaths)
+
+        preprocessed_xpath_input_str = json.dumps(preprocessed_xpath_input).replace('{','{{').replace('}','}}')
+        
+        refined_user_story_list.append(refined_user_story)
+        preprocessed_xpath_input_list.append(preprocessed_xpath_input_str)
+        
+                
+    return preprocessed_xpath_input_list, refined_user_story_list
 
 
 if __name__ == "__main__":
 
     app = initialize_graph()
-
-    xpath_string = """
-    {
-        "user name input"  : "/html/body/div[1]/div[1]/div/form/div[3]/input",
-        "password input" : "/html/body/div[1]/div[1]/div/form/div[4]/input",
-        "sign in button" : "/html/body/div[1]/div[1]/div/form/div[5]/div[2]/input",
-        "Access card management dropdown" : "/html/body/nav/div/div[1]/ul/li[14]/span",
-        "User card Management" : "/html/body/nav/div/div[1]/ul/li[14]/ul/li[2]/a",
-        "Unmapped card history tab" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[1]/ul/li[2]/a",
-        "export button" : "/html/body/div[2]/div[1]/section/div/div/div/section/div[2]/div[2]/section/div/div/div/section/div/div/div/div[2]/a",
-        "copy button" : "/html/body/div[16]/a[1]",
-        "excel button" : "/html/body/div[16]/a[2]"
-    }
-    """
+    
     
     user_story = """
-    URL: https://mymis.geminisolutions.com/
-
-Scenario Outline:User Card Mapping :UnMapped Cards : Export Options
-    When user navigates on "Access Card Management" and then "User Card Mapping"
-    And User goes to Unmapped card history
-    When User click on export button two
-    And User click on Copy option two
-    And User click on Excel option two
-    And User verifies if Excel "<filename>" got downloaded
-    And User click on Print button two
-    And User verifies if Print"<filename>" works
+    Background: User login at https://mymis.geminisolutions.com/Account/Login
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@123' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Search Outline : Verify number of entries functionality and search in Employee Directory
+    User navigates to "Employee Directory"
+    redirect to : https://mymis.geminisolutions.com/Directory/EmployeeDirectory
+    User Changes the number of entries to "<NumberOfEntries>"
+    User Searches for "<EmpName>"
     Examples:
-    | filename          |
-    | User Card Mapping |
+    | NumberOfEntries   | EmpName   |
+    | 25                | User      |          
     """
-    
+      
     epic_link = ""
     
     if epic_link:
         user_story = get_user_story_from_description(epic_link)
     
     
-    print(user_story)
+    xpath_string_list, refined_user_story_list = preprocessing(user_story)
     
     
-    locator_text, step_def_text = generate_test_cases(app,xpath_string,user_story)
-    
-   
-    
+    for index,xpath_string in enumerate(xpath_string_list):
+        refined_user_story = refined_user_story_list[index]
+        
+        dir_name = "mis-emp-dir-check"    
+        dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
+        os.makedirs(dir_path, exist_ok=True)
+        
+        locator_code, step_def_imp_code = generate_test_cases(app,xpath_string,refined_user_story,dir_path)

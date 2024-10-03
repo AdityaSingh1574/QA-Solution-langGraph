@@ -1,10 +1,10 @@
 Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
             User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
             User types password : 'Siva@123' and clicks on Login button
-            User clicks on the hanmburger button
-            User Clicks on Tests dropdown
-            user selects Test controls 
+            redirect to : https://athena-hartron-dev.geminisolutions.com/
 Scenario: Hartron TestControl Verify HSC Examination And Exam Template Navigation
+    User navigates to test controls under tests
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
     Given user is on TestControl screen
     Then Verify if user is on HSC Examination screen 
     Then navigate to Exam Template Management and verify if user is on that screen
