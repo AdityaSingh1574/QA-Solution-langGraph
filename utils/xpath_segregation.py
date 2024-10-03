@@ -1,6 +1,6 @@
 from utils.llm_call import call_anthropic_model
 import json
-from xpath_generator import get_raw_xpath_dictionary
+# from xpath_generator import get_raw_xpath_dictionary
 from json_repair import repair_json
 from logger import logger
 
@@ -110,26 +110,26 @@ def xpath_segregator(action, element_xpaths):
     return filtered_xpaths
     
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    url =  "https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy"
-    action_type = "No-Login"
-    xpaths_raw = get_raw_xpath_dictionary(url,action_type)
+#     url =  "https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy"
+#     action_type = "No-Login"
+#     xpaths_raw = get_raw_xpath_dictionary(url,action_type)
     
-    action = "Click on 'Add to cart' button and then click on 'Go to cart' or 'Cart' button"
-    seg_xpaths = xpath_segregator(action, xpaths_raw)
+#     action = "Click on 'Add to cart' button and then click on 'Go to cart' or 'Cart' button"
+#     seg_xpaths = xpath_segregator(action, xpaths_raw)
     
-    print("Segregated Xpaths : \n")
-    print(
-        json.dumps(seg_xpaths, indent=4)
-    )
+#     print("Segregated Xpaths : \n")
+#     print(
+#         json.dumps(seg_xpaths, indent=4)
+#     )
     
-    filtered_xpaths = filter_xpaths(seg_xpaths, xpaths_raw)
+#     filtered_xpaths = filter_xpaths(seg_xpaths, xpaths_raw)
     
-    print("Filtered Xpaths : \n")
-    print(
-        json.dumps(filtered_xpaths, indent=4)
-    )
+#     print("Filtered Xpaths : \n")
+#     print(
+#         json.dumps(filtered_xpaths, indent=4)
+#     )
     
 
     

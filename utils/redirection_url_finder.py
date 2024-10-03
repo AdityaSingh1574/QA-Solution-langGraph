@@ -1,14 +1,10 @@
 from utils.llm_call import call_anthropic_model,call_aws_bedrock_llm
 from json_repair import repair_json
 import json
-import os
-import time
 from logger import logger
 
 
 # TODO: need to test llama-3-170b for this task
-
-
 
 ACTION_REDIRECTION_LINK = """
 You will be given a set of instructions as an input, these are the instructions directing to perform an action on a website, the instructions follow a pattern of performing action on webpage and then getting redirected to another page after performing a certain action on the webpage, along with this the instructions shall also contain the url of the landing page and urls of the all the pages to which we are redirected to.
@@ -116,19 +112,19 @@ def redirection_url_finder(task_description):
     return extended_json_list
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    td = """
-    Scenario Outline : User searches for "shoes", adds it to card and confirms
-    User is at https://www.myntra.com and searches for "shoes"
-    redirected to : https://www.myntra.com/shoes?rawQuery=shoes
-    User Selects the first shoe 
-    redirected : https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy
-    User clicks on Add to cart and the moves to cart
-    redirected to : https://www.myntra.com/checkout/cart
-    User clicks on place order
-    """
+#     td = """
+#     Scenario Outline : User searches for "shoes", adds it to card and confirms
+#     User is at https://www.myntra.com and searches for "shoes"
+#     redirected to : https://www.myntra.com/shoes?rawQuery=shoes
+#     User Selects the first shoe 
+#     redirected : https://www.myntra.com/sports-shoes/red+tape/red-tape-men-drift-round-toe-mesh-walking-shoes/29869640/buy
+#     User clicks on Add to cart and the moves to cart
+#     redirected to : https://www.myntra.com/checkout/cart
+#     User clicks on place order
+#     """
     
-    extended = redirection_url_finder(td)
+#     extended = redirection_url_finder(td)
     
     

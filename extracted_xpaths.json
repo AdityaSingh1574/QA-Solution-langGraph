@@ -1,9 +1,0 @@
-{
-    "100_secure_div": "//div[contains(text(), '100% SECURE')]",
-    "hey_it_feels_so_light_div": "//div[contains(text(), 'Hey, it feels so light!')]",
-    "there_is_nothing_in_your_bag_lets_add_some_items_div": "//div[contains(text(), 'There is nothing in your bag. Let's add some items.')]",
-    "add_items_from_wishlist_div": "//div[contains(text(), 'ADD ITEMS FROM WISHLIST')]",
-    "bag_li": "//li[contains(text(), 'BAG')]",
-    "address_li": "//li[contains(text(), 'ADDRESS')]",
-    "payment_li": "//li[contains(text(), 'PAYMENT')]"
-}
