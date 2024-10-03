@@ -332,14 +332,11 @@ if __name__ == "__main__":
     User Types user id : 'webadmin'
     User types password : 'Gemini@123' and logs in
     redirect to : https://mymis.geminisolutions.com/
-    Search Outline : Verify number of entries functionality and search in Employee Directory
-    User navigates to "Employee Directory"
-    redirect to : https://mymis.geminisolutions.com/Directory/EmployeeDirectory
-    User Changes the number of entries to "<NumberOfEntries>"
-    User Searches for "<EmpName>"
-    Examples:
-    | NumberOfEntries   | EmpName   |
-    | 25                | User      |          
+    Scenario Outline : Test for applying LNSA
+    User navigates to apply under LNSA
+    redirect to : https://mymis.geminisolutions.com/Lnsa/Apply
+    User checks week 40 and week 41 for LNSA and clicks submit
+    User enters the reason as "Required for company's quick progress" and finally submits
     """
       
     epic_link = ""
@@ -354,7 +351,7 @@ if __name__ == "__main__":
     for index,xpath_string in enumerate(xpath_string_list):
         refined_user_story = refined_user_story_list[index]
         
-        dir_name = "mis-emp-dir-check"    
+        dir_name = "mis-apply-lnsa"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
