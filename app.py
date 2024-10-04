@@ -1,20 +1,20 @@
 import json
 import os
 import autogen
-from json_repair import repair_json
 from autogen.coding import LocalCommandLineCodeExecutor
 from langgraph.graph import END, MessageGraph,START
 from langgraph.checkpoint.memory import MemorySaver
 from logger import logger
 from utils.llm_call import call_anthropic_model
 from utils.azure_summarizer import get_work_description
+from utils.jira_ticket_hierarchy import get_jira_description
 from utils.redirection_url_finder import redirection_url_finder
 from utils.xpath_generator import get_raw_xpath_dictionary
 from utils.xpath_segregation import xpath_segregator
 from utils.general_utils import extract_text_between_markers
 from configs.autogen_config import config_list
 from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_JIRA_DESC, USER_STORY_CONVERSION_PROMPT
-from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT, PYTHON_CODE_GEN_PROMPT
+from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT
 from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT_STD_IMP
 
 
@@ -43,9 +43,12 @@ user_proxy = autogen.UserProxyAgent(
 
 
 
-def get_user_story_from_description(epic_link):
-    
-    work_item_map, _ = get_work_description(epic_link)
+def get_user_story_from_description(description_link):
+    if description_link:
+        if "atlassian.net" in description_link:
+            work_item_map = get_jira_description(description_link)
+        else:
+            work_item_map, _ = get_work_description(description_link)
     
     work_items_str = json.dumps(work_item_map, indent=4).replace('{', '{{').replace('}', '}}')
 
@@ -136,6 +139,7 @@ def java_code_generator(messages_history, config):
         extracted_code_locator = extract_text_between_markers(java_code, "---JAVA-CODE---", "---JAVA-CODE---") 
         with open(f"{dir_path}//Locators.java", "w") as f:
             f.write(extracted_code_locator)    
+        logger.info("Locators file generated and saved in directory")
     else:    
         extracted_code_std = extract_text_between_markers(java_code, "---STEP-DEFINITION-FILE-START---", "---STEP-DEFINITION-FILE-END---")
         extracted_code_imp = extract_text_between_markers(java_code, "---IMPLEMENTATION-FILE-START---", "---IMPLEMENTATION-FILE-END---")
@@ -143,11 +147,11 @@ def java_code_generator(messages_history, config):
         
         with open(f"{dir_path}//StepDefinition.java", "w") as f:
             f.write(extracted_code_std)
-            logger.info("")
+        logger.info("Step definition file generated and saved in directory")
         
         with open(f"{dir_path}//Implementation.java", "w") as f:
             f.write(extracted_code_imp)
-            #  TODO : ADD LOGGER 
+        logger.info("Implementation file generated and saved in directory") 
     
     
     return {"role" : "ai", "content" : java_code}
@@ -268,10 +272,10 @@ if __name__ == "__main__":
     """
     
       
-    epic_link = ""
+    description_link = ""
     
-    if epic_link:
-        user_story = get_user_story_from_description(epic_link)
+    if description_link:
+        user_story = get_user_story_from_description(description_link)
     
     
     xpath_string_list, refined_user_story_list = preprocessing(user_story)
