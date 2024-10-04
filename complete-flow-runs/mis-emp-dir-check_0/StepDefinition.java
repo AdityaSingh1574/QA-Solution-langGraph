@@ -4,67 +4,73 @@ import implementation.Implementation;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 
 public class StepDefinition {
     private Implementation implementation = new Implementation();
 
-    @Given("User is on the MyMIS login page {string}")
-    public void userIsOnTheMyMISLoginPage(String url) {
+    @Given("user is on the MIS login page {string}")
+    public void userIsOnMISLoginPage(String url) {
         implementation.launchUrl(url);
     }
 
-    @When("User enters user id {string} in the username field")
-    public void userEntersUserIdInTheUsernameField(String username) {
+    @When("user enters user id {string} in the username field")
+    public void userEntersUsername(String username) {
         implementation.enterUsername(username);
     }
 
-    @When("User enters password {string} in the password field")
-    public void userEntersPasswordInThePasswordField(String password) {
+    @And("user enters password {string} in the password field")
+    public void userEntersPassword(String password) {
         implementation.enterPassword(password);
     }
 
-    @When("User clicks on the login button")
-    public void userClicksOnTheLoginButton() {
+    @And("user clicks on the login button")
+    public void userClicksLoginButton() {
         implementation.clickLoginButton();
     }
 
-    @Then("User should be redirected to the MyMIS homepage")
-    public void userShouldBeRedirectedToTheMyMISHomepage() {
+    @Then("user should be redirected to the MIS homepage")
+    public void userRedirectedToHomepage() {
         implementation.verifyHomepage();
     }
 
-    @Given("User is on the MyMIS homepage")
-    public void userIsOnTheMyMISHomepage() {
-        // This step is already covered by the previous step
+    @Given("user is on the MIS homepage")
+    public void userIsOnMISHomepage() {
+        implementation.verifyHomepage();
     }
 
-    @When("User clicks on the {string} menu item")
-    public void userClicksOnTheMenuItem(String menuItem) {
-        implementation.clickMenuItem(menuItem);
+    @When("user navigates to {string}")
+    public void userNavigatesToEmployeeDirectory(String menuItem) {
+        implementation.navigateToMenuItem(menuItem);
     }
 
-    @Then("User should be redirected to the Employee Directory page")
-    public void userShouldBeRedirectedToTheEmployeeDirectoryPage() {
+    @Then("user should be redirected to the Employee Directory page")
+    public void userRedirectedToEmployeeDirectoryPage() {
         implementation.verifyEmployeeDirectoryPage();
     }
 
-    @When("User selects {string} from the entries dropdown")
-    public void userSelectsFromTheEntriesDropdown(String entries) {
-        implementation.selectEntries(entries);
+    @When("user clicks on the entries dropdown")
+    public void userClicksEntriesDropdown() {
+        implementation.clickEntriesDropdown();
     }
 
-    @When("User types {string} in the search bar")
-    public void userTypesInTheSearchBar(String searchTerm) {
+    @And("user selects {string} from the dropdown")
+    public void userSelectsFromDropdown(String option) {
+        implementation.selectDropdownOption(option);
+    }
+
+    @And("user enters {string} in the search bar")
+    public void userEntersInSearchBar(String searchTerm) {
         implementation.enterSearchTerm(searchTerm);
     }
 
-    @When("User presses enter")
+    @And("user presses enter")
     public void userPressesEnter() {
         implementation.pressEnter();
     }
 
-    @Then("User should see the search results for {string}")
-    public void userShouldSeeTheSearchResultsFor(String searchTerm) {
+    @Then("the search results for {string} should be displayed")
+    public void searchResultsDisplayed(String searchTerm) {
         implementation.verifySearchResults(searchTerm);
     }
 

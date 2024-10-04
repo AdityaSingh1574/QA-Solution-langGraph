@@ -326,22 +326,17 @@ if __name__ == "__main__":
 
     app = initialize_graph()
     
-    
-    user_story = """
-    Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Search Outline : Verify number of entries functionality and search in Employee Directory
-    User navigates to "Employee Directory"
-    redirect to : https://mymis.geminisolutions.com/Directory/EmployeeDirectory
-    User Changes the number of entries to "<NumberOfEntries>"
-    User Searches for "<EmpName>"
-    Examples:
-    | NumberOfEntries   | EmpName   |
-    | 25                | User      |          
-    """
-      
+    user_story="""
+User visits https://www.walmart.com/  and searches for "bag".
+Redirected to: https://www.walmart.com/search?q=bag 
+User selects the first bag and is redirected to:
+https://www.walmart.com/ip/Daisy-Rose-Tote-Shoulder-Bag-and-Matching-Clutch-for-Women-PU-Vegan-Leather-Handbag-for-Travel-Work-and-School-Cream-Box/403008624?classType=VARIANT&adsRedirect=true 
+User clicks "Add to Cart" and moves to the cart, redirected to:
+https://www.walmart.com/pac?id=403008624&ip=49.98&qt=1&g=FC&oId=526D690D7EDD4C83B8DC7938D8E873D0&fahs=f&facp=f&faacc=f&fshs=f&fscp=f&fsacc=f&cat=5438&po=&csid=101015017 
+User clicks "View Cart", redirected to:
+https://www.walmart.com/cart 
+
+"""
     epic_link = ""
     
     if epic_link:
@@ -354,7 +349,7 @@ if __name__ == "__main__":
     for index,xpath_string in enumerate(xpath_string_list):
         refined_user_story = refined_user_story_list[index]
         
-        dir_name = "mis-emp-dir-check"    
+        dir_name = "walmart"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
