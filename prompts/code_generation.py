@@ -1,14 +1,29 @@
-TRANSLATION_PROMPT_LOCATORS = """Translate the following code between `---PYTHON-CODE-START---` and `---PYTHON-CODE-END---` from PYTHON to JAVA
-    ---PYTHON-CODE-START---
-    {python_code}
-    ---PYTHON-CODE-END---
-    Return only the JAVA code between separators `---JAVA-CODE---` and `---JAVA-CODE---`
-    Important instructions
-    1. Do not return anything other than the JAVA code with the separators
+GENERATION_PROMPT_LOCATORS = """
+    You will be given xpaths of web elements as input for which a locator file is to be generated for the purpose of testing.
+    Your task will be to generate a locator file in JAVA which will be required for automation testing.
+    
+    the following are the xpaths given between `---XPATH-START---` and `---XPATH-END---`
+    
+    ---XPATH-START---
+    {xpath_string}
+    ---XPATH-END----
+  
+    Important instructions:
+    1. Add necessary import statements. 
+    2. Return the code between the separators `---JAVA-CODE---` and `---JAVA-CODE---` only
+    3. Return only the code between the separators nothing else.
+    The following is an example of Locators file to be generated:
+    
+    package locators;
+    public class Locators {{
+        public static By loginButton = By.xpath("//span[text()='Login with Gemini mail!']");
+        public static By firstName = By.xpath("//input[contains(@class,'first-name')]");
+        public static String textField = "//input[@id='email']";
+    }}
     """
     
     
-TRANSLATION_PROMPT_STD_IMP = """
+GENERATION_PROMPT_STD_IMP = """
         ---FEATURE-FILE-START---
         {feature_file_text}
         ---FEATURE-FILE-END---
