@@ -1,27 +1,24 @@
-import random
-import random
 import json
 import os
-import json
-from logger import logger
-from langgraph.graph import END, MessageGraph,START
-from IPython.display import Image, display
-from langgraph.checkpoint.memory import MemorySaver
-from utils.llm_call import call_anthropic_model
-from json_repair import repair_json
 import autogen
+from json_repair import repair_json
 from autogen.coding import LocalCommandLineCodeExecutor
+from langgraph.graph import END, MessageGraph,START
+from langgraph.checkpoint.memory import MemorySaver
+from logger import logger
+from utils.llm_call import call_anthropic_model
 from utils.azure_summarizer import get_work_description
 from utils.redirection_url_finder import redirection_url_finder
 from utils.xpath_generator import get_raw_xpath_dictionary
 from utils.xpath_segregation import xpath_segregator
 from utils.general_utils import extract_text_between_markers
 from configs.autogen_config import config_list
-from json_repair import repair_json
-from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_DESC, USER_STORY_CONVERSION_PROMPT
-from prompts.helpers import GET_FILE_CODE_PROMPT
+from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_JIRA_DESC, USER_STORY_CONVERSION_PROMPT
 from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT, PYTHON_CODE_GEN_PROMPT
-from prompts.translation import TRANSLATION_PROMPT_LOCATORS,TRANSLATION_PROMPT_STD_IMP
+from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT_STD_IMP
+
+
+
 
 assistant = autogen.AssistantAgent(
     name="assistant",
@@ -55,7 +52,7 @@ def get_user_story_from_description(epic_link):
     logger.info("Descriptions and relations received from a")
     
     user_story_from_description = call_anthropic_model(
-        prompt=WORK_ITEM_TO_FF_AZURE_DESC.format(work_items_str=work_items_str)
+        prompt=WORK_ITEM_TO_FF_AZURE_JIRA_DESC.format(work_items_str=work_items_str)
     )
     
     return user_story_from_description
@@ -71,69 +68,6 @@ def decide_entry_point(messages, config) -> str:
     return entry_point
 
 
-
-def get_file_code_json(file_type, text):
-        
-    final_prompt = GET_FILE_CODE_PROMPT.format(file_type=file_type,text=text)
-    
-    
-    llm_output = call_anthropic_model(
-      prompt=final_prompt
-    )
-    logger.info("File content extracted from LLMs")
-    
-    final_json = json.loads(repair_json(llm_output))
-    
-    return final_json
-
-
-def autogen_code_executor(messages,config):
-
-    logger.info("Code Execution and auto correction started")
-    
-    if config['configurable']['entry_point'] == "step_imp":
-        file_type = "Locator"
-    else:
-        file_type = "Step Definition and Implementation"
-    
-    instructions_to_autogen = messages[-1].content
-    
-    chat_res = user_proxy.initiate_chat(
-    assistant,
-    message=instructions_to_autogen,
-    summary_method="reflection_with_llm",
-    )
-    
-    logger.info("Completed code Generation in PYTHON")
-    
-    last_message_autogen = chat_res.chat_history[-1]['content']
-    
-    file_json = get_file_code_json(file_type, last_message_autogen)
-    
-    
-    final_content = "Step-definition file"
-    if config['configurable']['entry_point'] == "step_imp":
-        if isinstance(file_json,dict):
-            if 'step_definition' in file_json and 'implementation_file' in file_json:
-                final_content = f"""
-                ---STEP-DEFINITION-FILE-CODE----
-                {file_json['step_definition']}
-                ---STEP-DEFINITION-FILE-CODE----
-                
-                ---IMPLEMENTATION-FILE-CODE---
-                {file_json['implementation_file']}
-                ---IMPLEMENTATION-FILE-CODE---
-                """
-    else:
-        final_content = f"""
-        ---LOCATOR-FILE-CODE---
-        {file_json['locator']}
-        ---LOCATOR-FILE-CODE---
-        """
-    logger.info("Generated code ready for translation into JAVA")
-    return {"role" : "ai" , "content" : final_content}
-    
-
 def locators_file_node(messages,config):
     
     xpath_string = config["configurable"]["x_path_string"]
@@ -147,7 +81,6 @@ def locators_file_node(messages,config):
 def user_story_converter(messages, config):
     
     
-    xpath_string = config["configurable"]["x_path_string"]
     user_story = config["configurable"]["user_story_string"]
     
     final_prompt = USER_STORY_CONVERSION_PROMPT.format(user_story=user_story)
@@ -162,25 +95,16 @@ def user_story_converter(messages, config):
     logger.info("Feature file text generated and Saved in current directory")
     with open(f'{dir_path}//feature_file.feature', 'w') as f:
         f.write(feature_file_text)
-    
-    
-    
-    final_prompt = PYTHON_CODE_GEN_PROMPT.format(feature_file_text=feature_file_text, xpath_string=xpath_string)
 
-    logger.info("User Story to Feature File Node : Instructions ready for code Generation")
-    return {"role" : "human", "content" : final_prompt}    
+    logger.info("User Story to Feature File Node : Files ready for code Generation")
+    
+    return {"role" : "human", "content" : "Feature file ready for step definition and implementation file"}    
     
 
-def code_translate_bro(messages_history, config):
+def java_code_generator(messages_history, config):
     
     
-    logger.info(f"Code translation started for : {config['configurable']['entry_point']}")
-    
-    
-
-    python_code = messages_history[-1]
-    
-    final_prompt = TRANSLATION_PROMPT_LOCATORS.format(python_code=python_code)
+    logger.info(f"Code Generation started for : {config['configurable']['entry_point']}")
     
     dir_path = config['configurable']['dir_path']
     
@@ -191,14 +115,18 @@ def code_translate_bro(messages_history, config):
         with open(f"{dir_path}//Locators.java", 'r') as f:
             locator_file_text = f.read()
 
-        final_prompt = TRANSLATION_PROMPT_STD_IMP.format(locator_file_text=locator_file_text, feature_file_text=feature_file_text)
+        final_prompt = GENERATION_PROMPT_STD_IMP.format(locator_file_text=locator_file_text, feature_file_text=feature_file_text)
+    else: 
+        xpath_string  = config['configurable']['x_path_string']    
+        
+        final_prompt = GENERATION_PROMPT_LOCATORS.format(xpath_string=xpath_string)
     
 
     llm_output = call_anthropic_model(
         prompt=final_prompt
     )
     
-    logger.info(f"Code Translation complete for : {config['configurable']['entry_point']}")
+    logger.info(f"Code Generation complete for : {config['configurable']['entry_point']}")
     
     java_code = llm_output
     
@@ -215,9 +143,11 @@ def code_translate_bro(messages_history, config):
         
         with open(f"{dir_path}//StepDefinition.java", "w") as f:
             f.write(extracted_code_std)
+            logger.info("")
         
         with open(f"{dir_path}//Implementation.java", "w") as f:
             f.write(extracted_code_imp)
+            #  TODO : ADD LOGGER 
     
     
     return {"role" : "ai", "content" : java_code}
@@ -235,8 +165,7 @@ def initialize_graph():
 
     workflow.add_node("Locator_Node", locators_file_node)
     workflow.add_node("Step_Def_Imp_Node", user_story_converter)
-    workflow.add_node("autogen_code_executor", autogen_code_executor)
-    workflow.add_node("Code_Translator_Agent",code_translate_bro)
+    workflow.add_node("Code_Generator_Agent",java_code_generator)
 
     workflow.add_conditional_edges(
         START,
@@ -244,10 +173,9 @@ def initialize_graph():
         {"locator" : "Locator_Node", "step_imp" : "Step_Def_Imp_Node"}
     )
 
-    workflow.add_edge("Step_Def_Imp_Node","autogen_code_executor")
-    workflow.add_edge("Locator_Node", "autogen_code_executor")
-    workflow.add_edge("autogen_code_executor", "Code_Translator_Agent")
-    workflow.add_edge("Code_Translator_Agent", END)
+    workflow.add_edge("Step_Def_Imp_Node","Code_Generator_Agent")
+    workflow.add_edge("Locator_Node", "Code_Generator_Agent")
+    workflow.add_edge("Code_Generator_Agent", END)
 
 
     app = workflow.compile(checkpointer=memory)
@@ -329,15 +257,16 @@ if __name__ == "__main__":
     
     user_story = """
     Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline : Test for applying LNSA
-    User navigates to apply under LNSA
-    redirect to : https://mymis.geminisolutions.com/Lnsa/Apply
-    User checks week 40 and week 41 for LNSA and clicks submit
-    User enters the reason as "Required for company's quick progress" and finally submits
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@123' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : testing manage team task page
+    user navigates to "Manage team task" under task management
+    redirect to : https://mymis.geminisolutions.com/TaskManagement/ManageTaskTeam
+    user changes the entries to 25
+    user searches for "testing 123"
     """
+    
       
     epic_link = ""
     
@@ -351,7 +280,7 @@ if __name__ == "__main__":
     for index,xpath_string in enumerate(xpath_string_list):
         refined_user_story = refined_user_story_list[index]
         
-        dir_name = "mis-apply-lnsa"    
+        dir_name = "mis-tm-sub-task-mgmnt-test-search"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         

@@ -8,59 +8,59 @@ import io.cucumber.java.en.Then;
 public class StepDefinition {
     private Implementation implementation = new Implementation();
 
-    @Given("User is on the MyMIS login page {string}")
-    public void userIsOnTheMyMISLoginPage(String url) {
+    @Given("User is on the MIS login page {string}")
+    public void userIsOnMISLoginPage(String url) {
         implementation.launchUrl(url);
     }
 
-    @When("User enters user id {string}")
-    public void userEntersUserId(String userId) {
-        implementation.enterUserId(userId);
+    @When("User types user id {string}")
+    public void userTypesUserId(String userId) {
+        implementation.enterUsername(userId);
     }
 
-    @When("User enters password {string}")
-    public void userEntersPassword(String password) {
+    @When("User types password {string}")
+    public void userTypesPassword(String password) {
         implementation.enterPassword(password);
     }
 
-    @When("User clicks on the login button")
-    public void userClicksOnTheLoginButton() {
+    @When("User clicks login button")
+    public void userClicksLoginButton() {
         implementation.clickLoginButton();
     }
 
-    @Given("User is redirected to the MyMIS homepage")
-    public void userIsRedirectedToTheMyMISHomepage() {
-        implementation.verifyHomepage();
+    @Given("User navigates to apply under LNSA")
+    public void userNavigatesToApplyUnderLNSA() {
+        implementation.navigateToApplyLNSA();
     }
 
-    @When("User navigates to the Apply section under LNSA")
-    public void userNavigatesToTheApplySectionUnderLNSA() {
-        implementation.navigateToLNSAApply();
+    @When("User checks week {int} for LNSA")
+    public void userChecksWeekForLNSA(int weekNumber) {
+        implementation.checkWeekForLNSA(weekNumber);
     }
 
-    @Then("User is redirected to the LNSA Apply page")
-    public void userIsRedirectedToTheLNSAApplyPage() {
-        implementation.verifyLNSAApplyPage();
-    }
-
-    @When("User checks the checkbox for week {int}")
-    public void userChecksTheCheckboxForWeek(Integer weekNumber) {
-        implementation.checkWeekCheckbox(weekNumber);
-    }
-
-    @When("User clicks on the submit button")
-    public void userClicksOnTheSubmitButton() {
+    @When("User clicks submit button")
+    public void userClicksSubmitButton() {
         implementation.clickSubmitButton();
     }
 
-    @When("User enters the reason {string}")
+    @Then("User is redirected to LNSA application page")
+    public void userIsRedirectedToLNSAApplicationPage() {
+        implementation.verifyLNSAApplicationPage();
+    }
+
+    @When("User enters the reason as {string}")
     public void userEntersTheReason(String reason) {
         implementation.enterReason(reason);
     }
 
-    @When("User clicks on the final submit button")
-    public void userClicksOnTheFinalSubmitButton() {
+    @When("User clicks final submit button")
+    public void userClicksFinalSubmitButton() {
         implementation.clickFinalSubmitButton();
+    }
+
+    @Then("User's LNSA application should be submitted successfully")
+    public void userLNSAApplicationShouldBeSubmittedSuccessfully() {
+        implementation.verifyLNSASubmissionSuccess();
     }
 
     @Then("close the browser")

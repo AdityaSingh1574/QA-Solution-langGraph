@@ -1,8 +1,4 @@
-
-
-
-WORK_ITEM_TO_FF_AZURE_DESC = """
-    
+WORK_ITEM_TO_FF_AZURE_JIRA_DESC = """
     You will be given detailed descriptions of development tasks, convert each description into a scenario outline for testing the user interactions on the specified website. 
 
     The detailed description is given between `---DESCRIPTION-START---` and `---DESCRIPTION-END---`
@@ -49,7 +45,7 @@ You need to follow the below instruction for completing the task:
 2. Identify the names of the elements in each of the instructions and the particular actions associated with each of the elements
 3. Break the instructions in a way that for each line in the feature file one action and one element is covered
 4. for every broken down instruction convert the instruction into gherkin syntax 
-5. Include only the first URL given in the instructions,  for the rest which infer redirection from one webpage to another include a line in gherkn syntax which infers about redirection. 
+5. Include only the first URL given in the instructions,  for the rest which infer redirection from one webpage to another include a line in gherkin syntax which infers about redirection. 
 
 Important instructions
 1. Do not return anything other than the gherkin syntax

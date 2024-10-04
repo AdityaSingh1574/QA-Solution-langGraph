@@ -1,13 +1,12 @@
 package implementation;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.chrome.ChromeDriver;
 import java.time.Duration;
-import Locators.LoginPageLocators;
-import Locators.LNSAPageLocators;
+import LNSALocators;
 
 public class Implementation {
     private WebDriver driver;
@@ -21,58 +20,56 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterUserId(String userId) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(LoginPageLocators.USERNAME_INPUT)).sendKeys(userId);
+    public void enterUsername(String username) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(LNSALocators.USERNAME_INPUT)).sendKeys(username);
     }
 
     public void enterPassword(String password) {
-        driver.findElement(LoginPageLocators.PASSWORD_INPUT).sendKeys(password);
+        driver.findElement(LNSALocators.PASSWORD_INPUT).sendKeys(password);
     }
 
     public void clickLoginButton() {
-        driver.findElement(LoginPageLocators.LOGIN_BUTTON).click();
+        driver.findElement(LNSALocators.LOGIN_BUTTON).click();
     }
 
-    public void verifyHomepage() {
-        // Add verification logic for homepage
-        wait.until(ExpectedConditions.urlContains("mymis.geminisolutions.com"));
+    public void navigateToApplyLNSA() {
+        wait.until(ExpectedConditions.elementToBeClickable(LNSALocators.APPLY_LNSA_LINK)).click();
     }
 
-    public void navigateToLNSAApply() {
-        wait.until(ExpectedConditions.elementToBeClickable(LNSAPageLocators.APPLY_LNSA_LINK)).click();
-    }
-
-    public void verifyLNSAApplyPage() {
-        // Add verification logic for LNSA Apply page
-        wait.until(ExpectedConditions.urlContains("Lnsa/Apply"));
-    }
-
-    public void checkWeekCheckbox(Integer weekNumber) {
+    public void checkWeekForLNSA(int weekNumber) {
         if (weekNumber == 40) {
-            driver.findElement(LNSAPageLocators.WEEK_40_CHECKBOX).click();
+            driver.findElement(LNSALocators.WEEK_40_CHECKBOX).click();
         } else if (weekNumber == 41) {
-            driver.findElement(LNSAPageLocators.WEEK_41_CHECKBOX).click();
+            driver.findElement(LNSALocators.WEEK_41_CHECKBOX).click();
         }
     }
 
     public void clickSubmitButton() {
-        driver.findElement(LNSAPageLocators.SUBMIT_BUTTON).click();
+        driver.findElement(LNSALocators.SUBMIT_BUTTON).click();
+    }
+
+    public void verifyLNSAApplicationPage() {
+        // Implementation depends on the actual page structure
+        // This is a placeholder
+        wait.until(ExpectedConditions.urlContains("LNSAApplication"));
     }
 
     public void enterReason(String reason) {
-        // Note: The REASON_INPUT locator is null in the provided Locators file
-        // You may need to update this method once the correct locator is available
-        if (LNSAPageLocators.REASON_INPUT != null) {
-            driver.findElement(LNSAPageLocators.REASON_INPUT).sendKeys(reason);
-        }
+        // Implementation depends on the actual page structure
+        // This is a placeholder as REASON_INPUT locator is null in the provided locators
+        // wait.until(ExpectedConditions.visibilityOfElementLocated(LNSALocators.REASON_INPUT)).sendKeys(reason);
     }
 
     public void clickFinalSubmitButton() {
-        // Note: The FINAL_SUBMIT_BUTTON locator is null in the provided Locators file
-        // You may need to update this method once the correct locator is available
-        if (LNSAPageLocators.FINAL_SUBMIT_BUTTON != null) {
-            driver.findElement(LNSAPageLocators.FINAL_SUBMIT_BUTTON).click();
-        }
+        // Implementation depends on the actual page structure
+        // This is a placeholder as FINAL_SUBMIT_BUTTON locator is null in the provided locators
+        // driver.findElement(LNSALocators.FINAL_SUBMIT_BUTTON).click();
+    }
+
+    public void verifyLNSASubmissionSuccess() {
+        // Implementation depends on the actual page structure
+        // This is a placeholder
+        // wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'LNSA application submitted successfully')]")));
     }
 
     public void closeBrowser() {
