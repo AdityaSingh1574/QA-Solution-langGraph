@@ -25,6 +25,12 @@ Assume some actions to be obvious which may be the following:
 3. When some item is to be selected from a dropdown first click on the dropdown 
 4. When action is of putting the credentials then first step is to type the login id / email id and then type password in input fields and then click on login or sign in.
 5. When date range is to be selected and a range is given eg: "18th-20th of the current month" then selecting 18th day of the current month as "Event from" date as first step  and 20th day of the current month as "Event till" date as the second step, where would be as per the context of the task description, it might be check-in / check-out or leave from / leave to.
+6. When there are words like `before` and `after` given then consider them for deciding the order of the steps
+7. When the action is Confirm to something it will refer to clicking on a "yes" button or some button having an equivalent name
+8. When the action refers to adding something infer it as clicking "Add <item>" button where item should be inferred from the action
+9. When the action is export then it refers to clicking "Export" or "Download" button
+10. When the action is of select then it refers to clicking the dropdown and then clicking on the option as specified in the task
+11. When the action is checks or toggles it will refer to checking the check box for selecting the respective value
 
 Important Instructions:
 1. The actions must be mapped to the webpage URL on which the actions are taking place

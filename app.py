@@ -41,8 +41,6 @@ user_proxy = autogen.UserProxyAgent(
     },
 )
 
-
-
 def get_user_story_from_description(description_link):
     if description_link:
         if "atlassian.net" in description_link:
@@ -158,14 +156,11 @@ def java_code_generator(messages_history, config):
 
 
 def initialize_graph():
-    
-    # 2. Initialize the code interpreter tool
         
     logger.info("Initializing Graph...")
     memory = MemorySaver()
 
     workflow = MessageGraph()
-
 
     workflow.add_node("Locator_Node", locators_file_node)
     workflow.add_node("Step_Def_Imp_Node", user_story_converter)
@@ -180,7 +175,6 @@ def initialize_graph():
     workflow.add_edge("Step_Def_Imp_Node","Code_Generator_Agent")
     workflow.add_edge("Locator_Node", "Code_Generator_Agent")
     workflow.add_edge("Code_Generator_Agent", END)
-
 
     app = workflow.compile(checkpointer=memory)
     
