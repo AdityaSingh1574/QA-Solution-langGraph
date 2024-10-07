@@ -4,7 +4,7 @@ Feature: Team Management on MIS Portal
   Background:
     Given User is on the login page "https://mymis.geminisolutions.com/Account/Login"
     When User enters user id "webadmin"
-    And User enters password "Gemini@123"
+    And User enters password "Gemini@1234"
     And User clicks on the login button
     Then User should be redirected to the MIS homepage
 

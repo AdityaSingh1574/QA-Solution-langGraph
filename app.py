@@ -1,7 +1,5 @@
 import json
 import os
-import autogen
-from autogen.coding import LocalCommandLineCodeExecutor
 from langgraph.graph import END, MessageGraph,START
 from langgraph.checkpoint.memory import MemorySaver
 from logger import logger
@@ -17,29 +15,6 @@ from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_JIRA_DESC, USE
 from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT
 from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT_STD_IMP
 
-
-
-
-assistant = autogen.AssistantAgent(
-    name="assistant",
-    llm_config={
-        "cache_seed": None,  # seed for caching and reproducibility
-        "config_list": config_list,  # a list of OpenAI API configurations
-        "temperature": 0.5,  # temperature for sampling
-    },  # configuration for autogen's enhanced inference API which is compatible with OpenAI API
-)
-
-# create a UserProxyAgent instance named "user_proxy"
-user_proxy = autogen.UserProxyAgent(
-    name="user_proxy",
-    human_input_mode="NEVER",
-    max_consecutive_auto_reply=10,
-    is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE"),
-    code_execution_config={
-        # the executor to run the generated code
-        "executor": LocalCommandLineCodeExecutor(work_dir="coding"),
-    },
-)
 
 def get_user_story_from_description(description_link):
     if description_link:
@@ -248,6 +223,32 @@ def preprocessing(user_story):
     return preprocessed_xpath_input_list, refined_user_story_list
 
 
+
+def generate_testcases_from_user_story_or_description(user_input, input_type, dir_name=None):
+    
+    app = initialize_graph()
+    
+    if input_type == "Epic Link":
+        user_story = get_user_story_from_description(user_input)
+    else:
+        user_story = user_input
+    
+    xpath_string_list, refined_user_story_list = preprocessing(user_story)
+    
+    
+    for index,xpath_string in enumerate(xpath_string_list):
+        refined_user_story = refined_user_story_list[index]
+        
+        # arguments to this function can have `dir_name`, different examples in the data table will be stored in <dir_name>_0,<dir_name>_1,<dir_name>_2 etc
+        # hardcoded for now       
+        dir_name = "mis-tm-sub-task-mgmnt-test-search"    
+        dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
+        os.makedirs(dir_path, exist_ok=True)
+        
+        # can be used for showing this on frontend
+        locator_code, step_def_imp_code = generate_test_cases(app,xpath_string,refined_user_story,dir_path)
+    
+
 if __name__ == "__main__":
 
     app = initialize_graph()
@@ -256,7 +257,7 @@ if __name__ == "__main__":
     user_story = """
     Background: User login at https://mymis.geminisolutions.com/Account/Login
     User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
+    User types password : 'Gemini@1234' and logs in
     redirect to : https://mymis.geminisolutions.com/
     Scenario Outline : testing manage team task page
     user navigates to "Manage team task" under task management

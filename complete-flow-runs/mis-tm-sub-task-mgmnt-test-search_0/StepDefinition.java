@@ -4,68 +4,64 @@ import implementation.Implementation;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 
 public class StepDefinition {
     private Implementation implementation = new Implementation();
 
-    @Given("user is on the MIS login page {string}")
+    @Given("User is on the MIS login page {string}")
     public void userIsOnMISLoginPage(String url) {
         implementation.launchUrl(url);
     }
 
-    @When("user enters user id {string} in the username field")
-    public void userEntersUsername(String username) {
-        implementation.enterUsername(username);
+    @When("User enters user id {string}")
+    public void userEntersUserId(String userId) {
+        implementation.enterUserId(userId);
     }
 
-    @When("user enters password {string} in the password field")
+    @And("User enters password {string}")
     public void userEntersPassword(String password) {
         implementation.enterPassword(password);
     }
 
-    @When("user clicks on the login button")
+    @And("User clicks the login button")
     public void userClicksLoginButton() {
         implementation.clickLoginButton();
     }
 
-    @Then("user should be redirected to the MIS homepage")
-    public void userRedirectedToHomepage() {
-        implementation.verifyHomepage();
+    @Given("User navigates to {string} under task management")
+    public void userNavigatesToManageTeamTask(String menuItem) {
+        implementation.navigateToManageTeamTask(menuItem);
     }
 
-    @Given("user is on the MIS homepage")
-    public void userIsOnMISHomepage() {
-        // This step is already covered by the previous step
+    @And("User is redirected to the MIS homepage")
+    public void userIsRedirectedToMISHomepage() {
+        implementation.verifyRedirectionToHomepage();
     }
 
-    @When("user navigates to {string} under task management")
-    public void userNavigatesToManageTeamTask(String linkText) {
-        implementation.navigateToManageTeamTask(linkText);
+    @When("User navigates to the Manage Task Team page")
+    public void userNavigatesToManageTaskTeamPage() {
+        implementation.navigateToManageTaskTeamPage();
     }
 
-    @Then("user should be redirected to the Manage Task Team page")
-    public void userRedirectedToManageTaskTeamPage() {
-        implementation.verifyManageTaskTeamPage();
-    }
-
-    @When("user changes entries to {int}")
+    @And("User changes the entries to {int}")
     public void userChangesEntries(int entries) {
         implementation.changeEntries(entries);
     }
 
-    @When("user enters {string} in the search input field")
-    public void userEntersSearchQuery(String query) {
-        implementation.enterSearchQuery(query);
+    @And("User searches for {string}")
+    public void userSearchesFor(String searchTerm) {
+        implementation.searchFor(searchTerm);
     }
 
-    @When("user presses enter")
+    @And("User presses enter")
     public void userPressesEnter() {
         implementation.pressEnter();
     }
 
-    @Then("the search results should be displayed")
-    public void searchResultsDisplayed() {
-        implementation.verifySearchResults();
+    @Then("User should see the search results for {string}")
+    public void userShouldSeeSearchResults(String searchTerm) {
+        implementation.verifySearchResults(searchTerm);
     }
 
     @Then("close the browser")

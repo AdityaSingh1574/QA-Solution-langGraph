@@ -1,13 +1,13 @@
 package implementation;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import locators.Locators;
 import org.openqa.selenium.Keys;
 import java.time.Duration;
+import locators.Locators;
 
 public class Implementation {
     private WebDriver driver;
@@ -21,8 +21,8 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterUsername(String username) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.usernameInput)).sendKeys(username);
+    public void enterUserId(String userId) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.usernameInput)).sendKeys(userId);
     }
 
     public void enterPassword(String password) {
@@ -33,38 +33,38 @@ public class Implementation {
         driver.findElement(Locators.loginButton).click();
     }
 
-    public void verifyHomepage() {
-        // Add verification logic for homepage
-        wait.until(ExpectedConditions.urlContains("mymis.geminisolutions.com"));
+    public void navigateToManageTeamTask(String menuItem) {
+        // Implementation depends on the actual structure of the page
+        // This is a placeholder
+        System.out.println("Navigating to " + menuItem);
     }
 
-    public void navigateToManageTeamTask(String linkText) {
+    public void verifyRedirectionToHomepage() {
+        // Implement verification logic
+        System.out.println("Verifying redirection to homepage");
+    }
+
+    public void navigateToManageTaskTeamPage() {
         wait.until(ExpectedConditions.elementToBeClickable(Locators.manageTaskTeamLink)).click();
     }
 
-    public void verifyManageTaskTeamPage() {
-        // Add verification logic for Manage Task Team page
-        wait.until(ExpectedConditions.urlContains("ManageTaskTeam"));
-    }
-
     public void changeEntries(int entries) {
-        // Implementation for changing entries
-        // Note: The locator for entries dropdown is not provided, so this is a placeholder
+        // Implementation depends on the actual structure of the dropdown
+        // This is a placeholder
         System.out.println("Changing entries to " + entries);
     }
 
-    public void enterSearchQuery(String query) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchInput)).sendKeys(query);
+    public void searchFor(String searchTerm) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchInput)).sendKeys(searchTerm);
     }
 
     public void pressEnter() {
         driver.findElement(Locators.searchInput).sendKeys(Keys.ENTER);
     }
 
-    public void verifySearchResults() {
-        // Add verification logic for search results
-        // This is a placeholder as the exact verification method is not specified
-        System.out.println("Verifying search results");
+    public void verifySearchResults(String searchTerm) {
+        // Implement verification logic
+        System.out.println("Verifying search results for " + searchTerm);
     }
 
     public void closeBrowser() {

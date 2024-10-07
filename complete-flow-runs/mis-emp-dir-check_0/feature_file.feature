@@ -4,7 +4,7 @@ Feature: Employee Directory Search on MIS Portal
   Background: User Authentication
     Given user is on the MIS login page "https://mymis.geminisolutions.com/Account/Login"
     When user enters user id "webadmin" in the username field
-    And user enters password "Gemini@123" in the password field
+    And user enters password "Gemini@1234" in the password field
     And user clicks on the login button
     Then user should be redirected to the MIS homepage
 
