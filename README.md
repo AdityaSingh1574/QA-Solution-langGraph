@@ -26,6 +26,9 @@
      ```
      python app.py
      ```
+5. Solution Architecture Diagram
+
+![Solution Architecture Diagram](diagram\SolutionArchitectureDiagram.png "Optional title")
 
 ## Contact
 
