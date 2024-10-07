@@ -39,7 +39,8 @@ def open_url(url, action_type):
     # Use Selenium to load the page with JavaScript execution
     firefox_options = Options()
     # firefox_options.add_argument("--headless")
-    service = FirefoxService(GeckoDriverManager().install())
+    # service = FirefoxService(GeckoDriverManager().install())
+    service = FirefoxService(executable_path=r"C:\Users\saurav.anand\Downloads\geckodriver-v0.35.0-win64\geckodriver.exe") 
 
     driver = webdriver.Firefox(service=service, options=firefox_options)
 

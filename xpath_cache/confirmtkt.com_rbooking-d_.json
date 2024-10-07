@@ -1,0 +1,23 @@
+{
+    "blog_link": "//a[@href='https://blog.confirmtkt.com']",
+    "faq_link": "//a[@href='https://confirmtkt.freshdesk.com/support/home']",
+    "contact_link": "//a[@href='https://www.confirmtkt.com/contact.htm']",
+    "mediakit_link": "//a[@href='https://www.confirmtkt.com/MediaKit.zip']",
+    "career_link": "//a[@href='mailto:careers@confirmtkt.com']",
+    "alliances_link": "//a[@href='https://docs.google.com/forms/d/1rAepQbj02vTSI0JB9vC1GVrkQcboIUmKBrfT78dqVXo/viewform?ts=57d7aac1']",
+    "terms__conditions_link": "//a[@href='https://www.confirmtkt.com/termscondition.html']",
+    "csr_link": "//a[@href='https://www.confirmtkt.com/csr-policy.html']",
+    "investor_relations_link": "//a[@href='https://www.confirmtkt.com/investor-relation.html']",
+    "terms__cancellations_link": "//a[@href='https://www.confirmtkt.com/Booking/cancellation-rules.html']",
+    "privacy_policy_link": "//a[@href='https://www.confirmtkt.com/privacypolicy.htm']",
+    "ixigo_link": "//a[@href='https://www.ixigo.com/']",
+    "abhibus_link": "//a[@href='https://www.abhibus.com/']",
+    "login_span": "//span[contains(text(), 'LOGIN')]",
+    "ndls___new_delhi_span": "//span[contains(text(), 'NDLS  - New Delhi')]",
+    "mmct___mumbai_central_span": "//span[contains(text(), 'MMCT  - Mumbai Central')]",
+    "flights_div": "//div[contains(text(), 'FLIGHTS')]",
+    "hotels_div": "//div[contains(text(), 'HOTELS')]",
+    "from_label": "//label[contains(text(), 'From')]",
+    "to_label": "//label[contains(text(), 'To')]",
+    "departure_date_label": "//label[contains(text(), 'Departure Date')]"
+}
