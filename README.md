@@ -28,7 +28,7 @@
      ```
 5. Solution Architecture Diagram
 
-![Solution Architecture Diagram](diagram\SolutionArchitectureDiagram.png "Optional title")
+![Solution Architecture Diagram](diagram//SolutionArchitectureDiagram.png "Solution Architecture Diagram")
 
 ## Contact
 
