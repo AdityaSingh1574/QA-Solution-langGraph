@@ -10,7 +10,6 @@ from utils.redirection_url_finder import redirection_url_finder
 from utils.xpath_generator import get_raw_xpath_dictionary
 from utils.xpath_segregation import xpath_segregator
 from utils.general_utils import extract_text_between_markers
-from configs.autogen_config import config_list
 from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_JIRA_DESC, USER_STORY_CONVERSION_PROMPT
 from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT
 from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT_STD_IMP
@@ -279,7 +278,7 @@ if __name__ == "__main__":
     for index,xpath_string in enumerate(xpath_string_list):
         refined_user_story = refined_user_story_list[index]
         
-        dir_name = "mis-tm-sub-task-mgmnt-test-search"    
+        dir_name = "new-test-run-1233"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
