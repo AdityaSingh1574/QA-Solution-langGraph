@@ -40,7 +40,7 @@ def open_url(url, action_type):
     firefox_options = Options()
     # firefox_options.add_argument("--headless")
     # service = FirefoxService(GeckoDriverManager().install())
-    service = FirefoxService(executable_path=r"C:\Users\saurav.anand\Downloads\geckodriver-v0.35.0-win64\geckodriver.exe") 
+    service = FirefoxService(executable_path="geckodriver.exe") 
 
     driver = webdriver.Firefox(service=service, options=firefox_options)
 
@@ -156,6 +156,8 @@ def key_name(element, index):
         key = snake_case_convertor(element.get("placeholder"))
     elif element.get("onclick"):
         key = snake_case_convertor(element.get("onclick"))
+    elif element.get("formcontrolname"):
+        key = snake_case_convertor(element.get("formcontrolname"))
     
     if element.name == "a":
         key = key + "_link" if key else "delete_this_node_37" + str(index)
@@ -234,4 +236,5 @@ def get_raw_xpath_dictionary(url,action_type):
     with open(cache_path, 'w') as file:
         json.dump(data, file,indent=4)
     
-    return data
+    return 
+

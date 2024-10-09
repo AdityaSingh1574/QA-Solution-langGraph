@@ -1,40 +1,85 @@
 # from manual_testing_extractor import task_cut_return_json, test
 # from redirection_url_finder import redirection_url_finder
 # from json_repair import repair_json
+# import json
+# from app import preprocessing
+# from utils.xpath_generator import give_cache_file_name
+from utils.llm_call import call_anthropic_model
+from  prompts.initial_router import ROUTER_PROMPT
+from json_repair import repair_json
 import json
-from app import preprocessing
 if __name__ == "__main__":
     
-    td=""" 
+    input_text = """
     Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Search Outline : User test export, copy and print button
-    When User click on export button
-    And User click on Copy option
-    And User click on Excel option
-    And User verifies if Excel "<filename>" got downloaded
-    And User click on Print button
-    And User verifies if Print"<filename>" works
-    Examples:
-    | filename          |
-    | Access Cards      |
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@123' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : Test adding client 
+    user navigates to client management under ec-dc management
+    redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/ManageClient
+    user adds the client and fills the information client name, address, city and country and adds it
     """
     
-    xpaths, refined_user_story = preprocessing(td)
     
-    print("\nthe following are the xpaths: ")
-    
-    print(xpaths)
-    
-    print("\nthe following is the refined used story : \n")
-    
-    print(refined_user_story)
+    llm_output = call_anthropic_model(
+        prompt=ROUTER_PROMPT.format(input_text=input_text)
+    )
     
     
+    json_extracted = repair_json(llm_output)
+    
+    print(json.loads(json_extracted))
+    
+    # with open("input.txt", "r") as f:
+    #     sachin_text = f.read()
+    
+    # llm_output = call_anthropic_model(pro mpt=sachin_text)
     
     
+    # with open("sachin_test_output.txt", "w") as f:
+    #     f.write(llm_output)
+    
+        
+    # urls = ["https://athena-hartron-dev.geminisolutions.com/login", "https://athena-hartron-dev.geminisolutions.com/", "https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control"]
+    
+    
+    # for url in urls:
+    #     print(give_cache_file_name(url))
+    #     print("----------------------")
+    
+    # PRE-PROCESSING STEP
+    # td=""" 
+    # Background: User login at https://mymis.geminisolutions.com/Account/Login
+    # User Types user id : 'webadmin'
+    # User types password : 'Gemini@123' and logs in
+    # redirect to : https://mymis.geminisolutions.com/
+    # Search Outline : User test export, copy and print button
+    # When User click on export button
+    # And User click on Copy option
+    # And User click on Excel option
+    # And User verifies if Excel "<filename>" got downloaded
+    # And User click on Print button
+    # And User verifies if Print"<filename>" works
+    # Examples:
+    # | filename          |
+    # | Access Cards      |
+    # """
+    
+    # xpaths, refined_user_story = preprocessing(td)
+    
+    # print("\nthe following are the xpaths: ")
+    
+    # print(xpaths)
+    
+    # print("\nthe following is the refined used story : \n")
+    
+    # print(refined_user_story)
+    
+    
+    
+    
+    # 
     # task_cut_return_json()
     
     # json_sample = """

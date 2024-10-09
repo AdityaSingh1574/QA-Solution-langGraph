@@ -108,12 +108,105 @@
     user searches for "PIMCO" 
 
 
-    Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline : Test  
-    user navigates to 
-    redirect to : 
-    
-    
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    Scenario: Hartron TestControl Verify HSC Examination And Exam Template Navigation
+    User navigates to test controls under tests
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Given user is on TestControl screen
+    Then Verify if user is on HSC Examination screen 
+    Then navigate to Exam Template Management and verify if user is on that screen
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>":
+    Given user is on TestControl screen
+    When click on Actions
+    Then verify if "<Action Data>" exists in action menu by clicking on it
+    And verify if user is navigated to "<Screen Name>"
+    Examples:
+    |Screen Name        | Action Data         |
+    |Candidate(s) Report| Candidate Report    |
+    |Evaluate Candidate | Evaluate Candidate  |
+    |Test Summary       | Test Summary        |
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Verify Export Test Data Functionality
+    Given user is on TestControl screen
+    When click on Export test data button
+    And verify if download button exists
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Search By Name/Tag Verify Records
+    Given user is on TestControl screen
+    When enter search text in Search by <course-name>
+    Then verify if records are filtered by checking the count of courses
+    |course-name    |
+    |Core Java      |
+    |Python         |
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Click On Section Name Verify Records Are Sorted
+    Given user is on TestControl screen
+    When click on Name section
+    Then verify if section is getting sorted in increasing form by printing first 3 Names
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Verify Test Details Screen In Test Management
+    Given user is on TestControl screen
+    When click on first Test get test details
+    Then verify if test details screen is displayed and print the test url
+
+
+
+    Feature: Assign learner to batch
+    Background:  Navigate to login page at https://dev-athena.geminisolutions.com/login
+    And Login using "test123@gmail.com" and "test@123"
+    redirect to  :https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate count on assigning learner
+    Given Select "<module>", "<submodule>" from sidebar
+    redirect to  : https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a batch
+    And Select "Assign Learners" from actions dropdown for <batch>
+    And Get assigned learners count
+    And Assign a <learner>
+    Then Validate count after assigning
+    Examples:
+    |module        |submodule|learner|bactch| message                                |
+    |Manage Courses|Batches  |dummy |dummy|Learner added successfully to the batch|

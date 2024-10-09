@@ -1,5 +1,6 @@
 import json
 import os
+from json_repair import repair_json
 from langgraph.graph import END, MessageGraph,START
 from langgraph.checkpoint.memory import MemorySaver
 from logger import logger
@@ -9,10 +10,11 @@ from utils.jira_ticket_hierarchy import get_jira_description
 from utils.redirection_url_finder import redirection_url_finder
 from utils.xpath_generator import get_raw_xpath_dictionary
 from utils.xpath_segregation import xpath_segregator
-from utils.general_utils import extract_text_between_markers
+from utils.general_utils import extract_text_between_markers, prepare_reply
 from prompts.feature_file_generation import WORK_ITEM_TO_FF_AZURE_JIRA_DESC, USER_STORY_CONVERSION_PROMPT
 from prompts.testing_files_generation import LOCATOR_FILE_GEN_PROMPT
 from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT_STD_IMP
+from prompts.initial_router import ROUTER_PROMPT
 
 
 def get_user_story_from_description(description_link):
@@ -223,6 +225,18 @@ def preprocessing(user_story):
 
 
 
+def classify_instructions(input_text):
+
+    llm_output = call_anthropic_model(
+        prompt=ROUTER_PROMPT.format(input_text=input_text)
+    )
+    
+    classified_json = json.loads(repair_json(llm_output))
+    
+    return classified_json['classified_type'], classified_json['missing_params']
+
+
+
 def generate_testcases_from_user_story_or_description(user_input, input_type, dir_name=None):
     
     app = initialize_graph()
@@ -231,6 +245,11 @@ def generate_testcases_from_user_story_or_description(user_input, input_type, di
         user_story = get_user_story_from_description(user_input)
     else:
         user_story = user_input
+        
+    classified_type, missing_params = classify_instructions(input_text=user_story)
+    
+    if classified_type != "sophisticated instructions":
+         return prepare_reply(classified_type, missing_params)
     
     xpath_string_list, refined_user_story_list = preprocessing(user_story)
     
@@ -248,6 +267,8 @@ def generate_testcases_from_user_story_or_description(user_input, input_type, di
         locator_code, step_def_imp_code = generate_test_cases(app,xpath_string,refined_user_story,dir_path)
     
 
+    return "Successfully generated the test cases!"
+    
 if __name__ == "__main__":
 
     app = initialize_graph()
@@ -258,11 +279,12 @@ if __name__ == "__main__":
     User Types user id : 'webadmin'
     User types password : 'Gemini@1234' and logs in
     redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline : testing manage team task page
-    user navigates to "Manage team task" under task management
-    redirect to : https://mymis.geminisolutions.com/TaskManagement/ManageTaskTeam
-    user changes the entries to 25
-    user searches for "testing 123"
+    Scenario Outline: Test for adding new asset type on Mymis
+    User navigates to manage assets under Asset Allocation
+    redirect to : https://mymis.geminisolutions.com/Asset/Manage⁠
+    User clicks on Add new asset type
+    User gives asset type as "testing123" and Selects yes for Is temporary option and adds it 
+
     """
     
       
@@ -278,7 +300,7 @@ if __name__ == "__main__":
     for index,xpath_string in enumerate(xpath_string_list):
         refined_user_story = refined_user_story_list[index]
         
-        dir_name = "new-test-run-1233"    
+        dir_name = "new-mis -add-new-asset"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
