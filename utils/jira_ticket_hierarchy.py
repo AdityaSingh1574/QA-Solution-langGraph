@@ -230,7 +230,7 @@ def convert_ticket_details_as_string(ticket_details):
                 ticket_details_string += f"- {comment} \n"
         ticket_details_string += "------------\n"
 
-def get_jira_description(jira_url):
+def get_jira_description(jira_url :str)->str:
     
     email = os.getenv("GEMINI_EMAIL_JIRA")
     api_token = os.getenv("JIRA_API_TOKEN")

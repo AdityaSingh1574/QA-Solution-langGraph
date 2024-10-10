@@ -70,12 +70,12 @@ def call_aws_bedrock_llm(
     return llm_output["response_generated"]
 
 def call_anthropic_model(
-    prompt,
+    prompt : str,
     # model="meta.llama3-70b-instruct-v1:0",
-    model="anthropic.claude-3-5-sonnet-20240620-v1:0",
+    model: str ="anthropic.claude-3-5-sonnet-20240620-v1:0",
     temperature=0,
     sys_prompt="You are a helpful AI assistant",
-):
+) -> str:
     
     client = boto3.client("bedrock-runtime", region_name="us-west-2")
 

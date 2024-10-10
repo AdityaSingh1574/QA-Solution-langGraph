@@ -7,7 +7,7 @@ from prompts.redirection_url_utility import VARIABLE_NAME_REPLACE_PROMPT, ACTION
 # TODO: need to test llama-3-170b for this task
 
 
-def redirection_url_finder(task_description):
+def redirection_url_finder(task_description : str) -> list:
     
     base_json_extract_prompt = ACTION_REDIRECTION_LINK.format(task_description=task_description)
     

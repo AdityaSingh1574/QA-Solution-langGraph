@@ -20,7 +20,7 @@ import re
 #     return hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
 
 
-def give_cache_file_name(url):
+def give_cache_file_name(url : str) -> str:
     
     # Remove the protocol
     file_name = re.sub(r'^https?:\/\/', '', url)
@@ -33,7 +33,7 @@ def give_cache_file_name(url):
     return file_name + '.json'
 
 
-def open_url(url, action_type):
+def open_url(url:str, action_type:str) -> str:
     html_doc = None
 
     # Use Selenium to load the page with JavaScript execution
@@ -107,7 +107,7 @@ def create_xpaths_from_page_source(html_doc):
     return xpath_dictionary
 
 
-def select_xpath_attribute(element):
+def select_xpath_attribute(element : str) -> str:
     tag = element.name
 
     if element.get("id"):
@@ -217,7 +217,7 @@ def fetch_raw_xpath_dictionary(url,action_type):
     return xpath_dict
 
 
-def get_raw_xpath_dictionary(url,action_type):
+def get_raw_xpath_dictionary(url:str,action_type:str)->dict:
     filename = give_cache_file_name(url)
     cache_path = os.path.join('xpath_cache', filename)
 
@@ -236,5 +236,5 @@ def get_raw_xpath_dictionary(url,action_type):
     with open(cache_path, 'w') as file:
         json.dump(data, file,indent=4)
     
-    return 
+    return data
 

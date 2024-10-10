@@ -17,19 +17,18 @@ from prompts.code_generation import GENERATION_PROMPT_LOCATORS,GENERATION_PROMPT
 from prompts.initial_router import ROUTER_PROMPT
 
 
-def get_user_story_from_description(description_link):
+def get_user_story_from_description(description_link : str) -> str:
     if description_link:
         if "atlassian.net" in description_link:
-            work_item_map = get_jira_description(description_link)
+            work_item_str = get_jira_description(description_link)
+            logger.info("Task Descriptions Fetched from JIRA")
         else:
-            work_item_map, _ = get_work_description(description_link)
+            work_item_str = get_work_description(description_link)
+            logger.info("Task Descriptions Fetched from AZURE")
     
-    work_items_str = json.dumps(work_item_map, indent=4).replace('{', '{{').replace('}', '}}')
-
-    logger.info("Descriptions and relations received from a")
-    
+    # work_items_str = json.dumps(work_item_map, indent=4).replace('{', '{{').replace('}', '}}')
     user_story_from_description = call_anthropic_model(
-        prompt=WORK_ITEM_TO_FF_AZURE_JIRA_DESC.format(work_items_str=work_items_str)
+        prompt=WORK_ITEM_TO_FF_AZURE_JIRA_DESC.format(work_items_str=work_item_str)
     )
     
     return user_story_from_description
@@ -37,7 +36,7 @@ def get_user_story_from_description(description_link):
 
 
 
-def decide_entry_point(messages, config) -> str:
+def decide_entry_point(messages:list, config:dict) -> str:
 
     entry_point = config["configurable"]['entry_point']
     logger.info(f"Start Node Decided : {entry_point}")
@@ -45,7 +44,7 @@ def decide_entry_point(messages, config) -> str:
     return entry_point
 
 
-def locators_file_node(messages,config):
+def locators_file_node(messages:list, config:dict)->dict:
     
     xpath_string = config["configurable"]["x_path_string"]
     
@@ -55,7 +54,7 @@ def locators_file_node(messages,config):
     logger.info("Locator Node : Instructions Generated for code generation")
     
     return {"role" : "human" , "content" : final_locator_prompt}
-def user_story_converter(messages, config):
+def user_story_converter(messages:list, config:dict)->dict:
     
     
     user_story = config["configurable"]["user_story_string"]
@@ -78,7 +77,7 @@ def user_story_converter(messages, config):
     return {"role" : "human", "content" : "Feature file ready for step definition and implementation file"}    
     
 
-def java_code_generator(messages_history, config):
+def java_code_generator(messages:list, config:dict)->dict:
     
     
     logger.info(f"Code Generation started for : {config['configurable']['entry_point']}")
@@ -159,7 +158,7 @@ def initialize_graph():
     return app
 
 
-def generate_code_for_file(app,config):
+def generate_code_for_file(app,config:dict)->str:
     input = [("system", "you are a helpful assistant")]
     
     
@@ -169,7 +168,7 @@ def generate_code_for_file(app,config):
     
     return code[-1].content
 
-def generate_test_cases(app,xpath_string, user_story,dir_path):
+def generate_test_cases(app,xpath_string :str, user_story:str,dir_path:str)->tuple:
     # 4. Invoke the app
 
     locator_config = {"configurable": {"thread_id": "1", "entry_point" : "locator" , "x_path_string" : xpath_string, "dir_path" : dir_path}}
@@ -182,7 +181,7 @@ def generate_test_cases(app,xpath_string, user_story,dir_path):
     return locator_code , step_def_imp_code
 
 
-def preprocessing(user_story):
+def preprocessing(user_story: str)-> tuple:
        
     logger.info("pre-processing started")
     
@@ -225,7 +224,7 @@ def preprocessing(user_story):
 
 
 
-def classify_instructions(input_text):
+def classify_instructions(input_text : str)->tuple:
 
     llm_output = call_anthropic_model(
         prompt=ROUTER_PROMPT.format(input_text=input_text)
@@ -233,11 +232,13 @@ def classify_instructions(input_text):
     
     classified_json = json.loads(repair_json(llm_output))
     
+    logger.info(f"User input classified as : {classified_json['classified_type']}")
+    
     return classified_json['classified_type'], classified_json['missing_params']
 
 
 
-def generate_testcases_from_user_story_or_description(user_input, input_type, dir_name=None):
+def generate_testcases_from_user_story_or_description(user_input : str, input_type : str, dir_name: str=None) -> str:
     
     app = initialize_graph()
     
@@ -249,7 +250,7 @@ def generate_testcases_from_user_story_or_description(user_input, input_type, di
     classified_type, missing_params = classify_instructions(input_text=user_story)
     
     if classified_type != "sophisticated instructions":
-         return prepare_reply(classified_type, missing_params)
+        return prepare_reply(classified_type, missing_params)
     
     xpath_string_list, refined_user_story_list = preprocessing(user_story)
     
@@ -259,7 +260,7 @@ def generate_testcases_from_user_story_or_description(user_input, input_type, di
         
         # arguments to this function can have `dir_name`, different examples in the data table will be stored in <dir_name>_0,<dir_name>_1,<dir_name>_2 etc
         # hardcoded for now       
-        dir_name = "mis-tm-sub-task-mgmnt-test-search"    
+        dir_name = "new-test-run-after-type-return-type"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
@@ -271,7 +272,7 @@ def generate_testcases_from_user_story_or_description(user_input, input_type, di
     
 if __name__ == "__main__":
 
-    app = initialize_graph()
+    # app = initialize_graph()
     
     
     user_story = """
@@ -284,24 +285,27 @@ if __name__ == "__main__":
     redirect to : https://mymis.geminisolutions.com/Asset/Manage⁠
     User clicks on Add new asset type
     User gives asset type as "testing123" and Selects yes for Is temporary option and adds it 
-
     """
     
+    print(
+        generate_testcases_from_user_story_or_description(user_story, "user_story")
+    )
+    
       
-    description_link = ""
+    # description_link = ""
     
-    if description_link:
-        user_story = get_user_story_from_description(description_link)
-    
-    
-    xpath_string_list, refined_user_story_list = preprocessing(user_story)
+    # if description_link:
+    #     user_story = get_user_story_from_description(description_link)
     
     
-    for index,xpath_string in enumerate(xpath_string_list):
-        refined_user_story = refined_user_story_list[index]
+    # xpath_string_list, refined_user_story_list = preprocessing(user_story)
+    
+    
+    # for index,xpath_string in enumerate(xpath_string_list):
+    #     refined_user_story = refined_user_story_list[index]
         
-        dir_name = "new-mis -add-new-asset"    
-        dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
-        os.makedirs(dir_path, exist_ok=True)
+    #     dir_name = "new-mis -add-new-asset"    
+    #     dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
+    #     os.makedirs(dir_path, exist_ok=True)
         
-        locator_code, step_def_imp_code = generate_test_cases(app,xpath_string,refined_user_story,dir_path)
+    #     locator_code, step_def_imp_code = generate_test_cases(app,xpath_string,refined_user_story,dir_path)
