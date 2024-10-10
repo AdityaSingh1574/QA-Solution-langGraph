@@ -276,15 +276,7 @@ if __name__ == "__main__":
     
     
     user_story = """
-    Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@1234' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline: Test for adding new asset type on Mymis
-    User navigates to manage assets under Asset Allocation
-    redirect to : https://mymis.geminisolutions.com/Asset/Manage⁠
-    User clicks on Add new asset type
-    User gives asset type as "testing123" and Selects yes for Is temporary option and adds it 
+    Hello, how are you ?
     """
     
     print(
