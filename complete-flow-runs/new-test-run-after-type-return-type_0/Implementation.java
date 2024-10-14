@@ -5,15 +5,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 import locators.Locators;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-import org.junit.Assert;
+import java.time.Duration;
 
 public class Implementation {
     private WebDriver driver;
     private WebDriverWait wait;
+    private int initialLearnerCount;
 
     public void launchUrl(String url) {
         WebDriverManager.chromedriver().setup();
@@ -23,61 +22,66 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterUsername(String username) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.usernameInput)).sendKeys(username);
+    public void enterEmail(String email) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.emailInput)).sendKeys(email);
     }
 
     public void enterPassword(String password) {
         driver.findElement(Locators.passwordInput).sendKeys(password);
     }
 
-    public void clickLoginButton() {
-        driver.findElement(Locators.loginButton).click();
+    public void clickSignIn() {
+        driver.findElement(Locators.signInButton).click();
     }
 
-    public void verifyHomepage() {
-        wait.until(ExpectedConditions.urlContains("mymis.geminisolutions.com"));
+    public void selectSidebarOption(String option) {
+        By locator = option.equals("Manage Courses") ? Locators.manageCourseSidebar : Locators.batchesSidebar;
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
     }
 
-    public void navigateToAssetAllocation() {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.assetAllocationSpan)).click();
+    public void verifyBatchesPage() {
+        // Add verification logic here
     }
 
-    public void clickManageAssets() {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.manageAssetLink)).click();
+    public void clickActionsIcon(String record) {
+        wait.until(ExpectedConditions.elementToBeClickable(Locators.actionsIcon)).click();
     }
 
-    public void verifyAssetManagementPage() {
-        wait.until(ExpectedConditions.urlContains("Asset/Manage"));
+    public void selectDropdownOption(String option) {
+        // Since the locator is null, we'll need to implement a custom logic to find and click the option
+        // This is a placeholder and needs to be implemented based on the actual page structure
     }
 
-    public void clickAddNewAssetTypeButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.addNewAssetTypeButton)).click();
+    public void verifyAssignLearnersPage() {
+        // Add verification logic here
     }
 
-    public void enterAssetType(String assetType) {
-        // Assuming there's an input field for asset type, we'll use a generic XPath
-        By assetTypeInput = By.xpath("//input[@placeholder='Enter Asset Type']");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(assetTypeInput)).sendKeys(assetType);
+    public void getLearnerCount() {
+        String countText = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.assignedLearnersCount)).getText();
+        initialLearnerCount = Integer.parseInt(countText);
     }
 
-    public void selectIsTemporaryOption(String option) {
-        // Assuming there's a dropdown for Is temporary option, we'll use a generic XPath
-        By isTemporaryDropdown = By.xpath("//select[@name='IsTemporary']");
-        Select dropdown = new Select(driver.findElement(isTemporaryDropdown));
-        dropdown.selectByVisibleText(option);
+    public void unassignLearner(String email) {
+        driver.findElement(Locators.learnerEmailInput).sendKeys(email);
+        // Additional steps to select the learner might be needed
     }
 
-    public void clickAddButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.addButton)).click();
+    public void clickButton(String buttonText) {
+        if (buttonText.equals("unassign selected")) {
+            driver.findElement(Locators.unassignSelectedButton).click();
+        }
+        // Add logic for other buttons if needed
     }
 
-    public void verifyAssetTypeAdded() {
-        // Assuming there's a success message or the new asset type appears in a list
-        // We'll use a generic XPath to check for a success message
-        By successMessage = By.xpath("//div[contains(text(),'Asset type added successfully')]");
-        Assert.assertTrue("Asset type was not added successfully", 
-            wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage)).isDisplayed());
+    public void confirmAction(String buttonText) {
+        // Since the locator is null, we'll need to implement a custom logic to find and click the confirmation button
+        // This is a placeholder and needs to be implemented based on the actual page structure
+    }
+
+    public void validateUpdatedCount() {
+        String updatedCountText = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.updatedLearnersCount)).getText();
+        int updatedCount = Integer.parseInt(updatedCountText);
+        assert updatedCount == initialLearnerCount - 1 : "Learner count did not decrease as expected";
     }
 
     public void closeBrowser() {

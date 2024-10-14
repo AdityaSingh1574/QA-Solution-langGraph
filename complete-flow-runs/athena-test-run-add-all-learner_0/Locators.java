@@ -9,12 +9,12 @@ public class Locators {
     public static By manageCourseSidebar = By.xpath("//span[contains(text(), 'My Course Library')]");
     public static By batchesSidebar = By.xpath("//span[contains(text(), 'Your Mentees')]");
     public static By actionsIcon = By.xpath("//div[contains(text(), 'dummy')]");
-    public static By assignedLearnersCount = By.xpath("//span[contains(text(), '1113')]");
-    public static By learnerEmailInput = By.xpath("//input[@class='p-inputtext p-component p-element ng-untouched ng-pristine ng-valid']");
-    public static By unassignSelectedButton = By.xpath("//button[contains(text(), 'Unassign All')]");
-    public static By updatedLearnersCount = By.xpath("//span[contains(text(), '1113')]");
+    public static By assignedLearnersCount = By.xpath("//span[contains(text(), 'TU')]");
+    public static By unassignedLearnerCheckbox = By.xpath("//span[contains(text(), 'Unassigned')]");
+    public static By nextPageButton = By.xpath("//button[contains(text(), '2')]");
+    public static By assignSelectedButton = By.xpath("//button[contains(text(), 'Assign All')]");
 
-    // For elements with NULL xpath, we'll define them as null
-    public static By assignLearnersOption = null;
-    public static By confirmYesButton = null;
+    // For NULL values, we'll define them as strings to allow flexibility in usage
+    public static String assignLearnersOption = "NULL";
+    public static String confirmAssignmentButton = "NULL";
 }

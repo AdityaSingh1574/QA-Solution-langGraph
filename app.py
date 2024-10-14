@@ -18,14 +18,14 @@ from prompts.initial_router import ROUTER_PROMPT
 
 
 def get_user_story_from_description(description_link : str) -> str:
-    if description_link:
-        if "atlassian.net" in description_link:
-            work_item_str = get_jira_description(description_link)
-            logger.info("Task Descriptions Fetched from JIRA")
-        else:
-            work_item_str = get_work_description(description_link)
-            logger.info("Task Descriptions Fetched from AZURE")
     
+    if "atlassian.net" in description_link:
+        work_item_str = get_jira_description(description_link)
+        logger.info("Task Descriptions Fetched from JIRA")
+    else:
+        work_item_str = get_work_description(description_link)
+        logger.info("Task Descriptions Fetched from AZURE")
+
     # work_items_str = json.dumps(work_item_map, indent=4).replace('{', '{{').replace('}', '}}')
     user_story_from_description = call_anthropic_model(
         prompt=WORK_ITEM_TO_FF_AZURE_JIRA_DESC.format(work_items_str=work_item_str)
@@ -246,7 +246,10 @@ def generate_testcases_from_user_story_or_description(user_input : str, input_ty
         user_story = get_user_story_from_description(user_input)
     else:
         user_story = user_input
-        
+    
+    with open("epic_to_usr_story.txt", "w") as f:
+        f.write(user_story)
+    
     classified_type, missing_params = classify_instructions(input_text=user_story)
     
     if classified_type != "sophisticated instructions":
@@ -260,7 +263,7 @@ def generate_testcases_from_user_story_or_description(user_input : str, input_ty
         
         # arguments to this function can have `dir_name`, different examples in the data table will be stored in <dir_name>_0,<dir_name>_1,<dir_name>_2 etc
         # hardcoded for now       
-        dir_name = "new-test-run-after-type-return-type"    
+        dir_name = "athena-test-un-assign-learner"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
@@ -275,12 +278,30 @@ if __name__ == "__main__":
     # app = initialize_graph()
     
     
-    user_story = """
-    Hello, how are you ?
+    user_input = """
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Filter and unassign a candidate
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to:https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Expand the "Category" dropdown
+    And Select "EC" from the dropdown
+    And Expand the "selected category" dropdown
+    And Select "QA" from the dropdown
+    And Get assigned learners count
+    And Unassign a learner from the filtered list
+    Then Validate count after unassigning
     """
     
     print(
-        generate_testcases_from_user_story_or_description(user_story, "user_story")
+        generate_testcases_from_user_story_or_description(user_input, "user story")
     )
     
       

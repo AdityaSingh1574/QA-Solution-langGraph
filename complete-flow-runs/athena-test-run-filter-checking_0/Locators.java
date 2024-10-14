@@ -10,11 +10,10 @@ public class Locators {
     public static By batchesSidebar = By.xpath("//span[contains(text(), 'Your Mentees')]");
     public static By actionsIcon = By.xpath("//div[contains(text(), 'dummy')]");
     public static By assignedLearnersCount = By.xpath("//span[contains(text(), '1113')]");
-    public static By learnerEmailInput = By.xpath("//input[@class='p-inputtext p-component p-element ng-untouched ng-pristine ng-valid']");
-    public static By unassignSelectedButton = By.xpath("//button[contains(text(), 'Unassign All')]");
-    public static By updatedLearnersCount = By.xpath("//span[contains(text(), '1113')]");
+    public static By statusDropdown = By.xpath("//span[contains(text(), 'Status')]");
+    public static By assignedOption = By.xpath("//span[contains(text(), 'Assigned')]");
+    public static By filteredRecords = By.xpath("//span[contains(text(), '1 - 10 of 1113 records')]");
 
-    // For elements with NULL xpath, we'll define them as null
-    public static By assignLearnersOption = null;
-    public static By confirmYesButton = null;
+    // For NULL value, we'll leave it as a comment
+    // public static By assignLearnersOption = By.xpath("NULL");
 }

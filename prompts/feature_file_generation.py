@@ -20,8 +20,8 @@ WORK_ITEM_TO_FF_AZURE_JIRA_DESC = """
     4. Specify Actual Names and Identifiers:
     - Clearly name any buttons, links, or placeholders mentioned in the description. Use quotes to denote the exact labels or text on these UI elements.
     - If specific items are to be interacted with (like 'Noir Jacket' or 'Grey Jacket'), use these exact names in the scenario outline.
-    4. Include Examples for Multiple Cases: If the task involves multiple items or variations, include a table of examples at the end of the scenario. Each row should represent a different case, clearly listing any relevant specifics like item names. Mention the item name for which example is given as a variable enclosed in < and > 
-    5. Return only the summarization with the tasks, ignore adding anything additional like additional checks, etc 
+    4. Include Examples for Multiple Cases: If the task involves multiple items or variations, include a table of examples at the end of the scenario. Each row should represent a different case, clearly listing any relevant specifics like item names. Mention the item name for which example is given as a variable enclosed in < and >, include the examples section only if it is required else dont include it.
+    5. Return only the summarization with the tasks, do not return anything else, start with background section and end with example section (if it is required, else end with the scenario section)
     
     **Example Input**:
     "Implement and test the user interaction on the landing page of https://sauce-demo.myshopify.com/ to ensure that when a user clicks on an item name (e.g., Noir Jacket : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket ), they are redirected to the respective product page. This involves adjusting the UI to make item names clickable and ensuring that the redirect functionality is correctly set up. Acceptance Criteria: Clicking on an item name on the landing page redirects to the product page. Ensure compatibility with major browsers (Chrome, Firefox, Safari). UI elements should be accessible and responsive."
@@ -31,7 +31,7 @@ WORK_ITEM_TO_FF_AZURE_JIRA_DESC = """
     User is on the landing page : https://sauce-demo.myshopify.com/
     When user clicks on the 'Noir jakcet' on the landing page
     Then user is redirected to the product page : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket
-    
+
 
     Apply these steps to convert detailed task descriptions into concise, structured scenario outlines for testing.
     """

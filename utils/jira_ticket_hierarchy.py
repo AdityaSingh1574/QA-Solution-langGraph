@@ -230,6 +230,11 @@ def convert_ticket_details_as_string(ticket_details):
                 ticket_details_string += f"- {comment} \n"
         ticket_details_string += "------------\n"
 
+    with open("description_txt.txt", "w") as f:
+        f.write(ticket_details_string)
+    
+    return ticket_details_string
+    
 def get_jira_description(jira_url :str)->str:
     
     email = os.getenv("GEMINI_EMAIL_JIRA")
