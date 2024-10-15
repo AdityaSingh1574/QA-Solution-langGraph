@@ -1,13 +1,13 @@
 package implementation;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import locators.Locators;
 import org.openqa.selenium.Keys;
 import java.time.Duration;
+import locators.Locators;
 
 public class Implementation {
     private WebDriver driver;
@@ -34,8 +34,7 @@ public class Implementation {
     }
 
     public void verifyHomepage() {
-        // Add verification logic for homepage
-        wait.until(ExpectedConditions.urlContains("mymis.geminisolutions.com"));
+        wait.until(ExpectedConditions.urlContains("Home"));
     }
 
     public void navigateToManageTeamTask(String linkText) {
@@ -43,28 +42,31 @@ public class Implementation {
     }
 
     public void verifyManageTaskTeamPage() {
-        // Add verification logic for Manage Task Team page
         wait.until(ExpectedConditions.urlContains("ManageTaskTeam"));
     }
 
     public void changeEntries(int entries) {
         // Implementation for changing entries
-        // Note: The locator for entries dropdown is not provided, so this is a placeholder
+        // Note: Locator for entries dropdown is not provided, so this is a placeholder
         System.out.println("Changing entries to " + entries);
     }
 
-    public void enterSearchQuery(String query) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchInput)).sendKeys(query);
+    public void enterSearchInput(String searchText) {
+        // Implementation for entering search input
+        // Note: Locator for search input is not provided, so this is a placeholder
+        System.out.println("Entering search text: " + searchText);
     }
 
     public void pressEnter() {
-        driver.findElement(Locators.searchInput).sendKeys(Keys.ENTER);
+        // Implementation for pressing enter
+        // Note: Locator for search input is not provided, so this is a placeholder
+        System.out.println("Pressing Enter key");
     }
 
-    public void verifySearchResults() {
-        // Add verification logic for search results
-        // This is a placeholder as the exact verification method is not specified
-        System.out.println("Verifying search results");
+    public void verifyFilteredResults(String searchText) {
+        // Implementation for verifying filtered results
+        // Note: This is a placeholder as we don't have specific locators for results
+        System.out.println("Verifying filtered results for: " + searchText);
     }
 
     public void closeBrowser() {

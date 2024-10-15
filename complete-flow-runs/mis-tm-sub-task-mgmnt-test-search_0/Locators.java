@@ -8,6 +8,5 @@ public class Locators {
     public static By loginButton = By.xpath("//input[@id='btnLogin']");
     public static By manageTaskTeamLink = By.xpath("//a[@href='https://mymis.geminisolutions.com/TaskManagement/ManageTaskTeam']");
     public static By entriesDropdown = null;
-    public static By searchInput = By.xpath("//input[@id='username']");
-    public static By searchButton = By.xpath("//input[@id='btnLogin']");
+    public static By searchInput = null;
 }
