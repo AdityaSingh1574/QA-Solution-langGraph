@@ -1,88 +1,91 @@
 import os
+import re
 import json
+import time
 import validators
+import hashlib
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from colorama import Fore, Style
 from collections import OrderedDict
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
-import time
 from logger import logger
-# TODO : import hashlib # Uncomment and replace this with file name function once testing is complete
-import re
-
-# TODO : Uncomment and replace this with file name function once testing is complete
-# def normalize_url_to_filename(url):
-#     """Normalize the URL to a safe filename by hashing."""
-#     return hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
 
 
-def give_cache_file_name(url : str) -> str:
-    
-    # Remove the protocol
-    file_name = re.sub(r'^https?:\/\/', '', url)
-    # Remove www if it exists
-    file_name = re.sub(r'^www\.', '', file_name)
-    # Replace special characters that are not allowed in filenames
-    file_name = re.sub(r'[\/\?%*:|"<>]', '_', file_name)
-    # Cut off parameters after an ampersand if any
-    file_name = re.sub(r'\&.*', '', file_name)
-    return file_name + '.json'
+
+def create_filename_from_hash(url):
+    return hashlib.md5(url.encode('utf-8')).hexdigest() + '.json'
+ 
 
 
-def open_url(url:str, action_type:str) -> str:
+def login_user_applications(application_name):
+    if application_name == "Gembook":
+        pass
+ 
+ 
+def create_filename_from_url(url):
+    """This method creates a human readable name from the given URL."""
+    file_name = re.sub(r"^https?://(www\.)?", "", url)
+    file_name = re.sub(r"\.(com|in|io|org|net|gov|edu|uk|co\.\w+)(/|$)", "", file_name)
+    file_name = re.sub(r'[\/\?%*:|"<>=]|&.*', "", file_name)
+    return file_name + ".json"
+ 
+
+ 
+def open_url(url, action_type):
+    """This method launch the given URL in headless mode to fetch page object."""
     html_doc = None
-
+    
+    # TODO : if action_type == 'Login' then dont login else bypass login
+ 
     # Use Selenium to load the page with JavaScript execution
     firefox_options = Options()
-    # firefox_options.add_argument("--headless")
-    # service = FirefoxService(GeckoDriverManager().install())
-    service = FirefoxService(executable_path="geckodriver.exe") 
-
+    firefox_options.add_argument("--headless")
+    service = FirefoxService(GeckoDriverManager().install())
+ 
     driver = webdriver.Firefox(service=service, options=firefox_options)
-
+ 
     driver.get(url)
-    logger.info("waiting for loading webpage properly")
-    time.sleep(5)
     driver.maximize_window()
-    
-    # TODO : if action_type == "Login" then dont bypass Login : for getting the source code of login page.
-    
-    # waiting for manual login
-    logger.warning("WAITING FOR MANUAL LOGIN")
-    time.sleep(30)
-    
-    # changing to the page where we wanna go 
-    driver.get(url)
-    time.sleep(8)
+ 
     # Wait until the page is fully loaded
-    WebDriverWait(driver, 60).until(
-        lambda d: d.execute_script("return document.readyState") == "complete"
-    )
-
+    timer = 0
+    message = False
+    while not(message) and timer < 10:
+        message = driver.execute_script("""
+            document.addEventListener("DOMContentLoaded", function(e) {
+            console.log("page has loaded");
+            return "page has loaded";  // Return message
+            });
+            return document.readyState === 'complete'; // Check initial readyState
+        """)
+ 
+        time.sleep(2)
+        timer += 1
+ 
     html_doc = driver.page_source
+    print("HTML extracted successfully")
+ 
     driver.quit()
-    logger.info("Source code extracted successfully")
     return html_doc
-
-
+ 
+ 
 def create_xpaths_from_page_source(html_doc):
+    """This method identifies elements required for the xpath."""
     soup = BeautifulSoup(html_doc, "html.parser")
-
+ 
     # List of tags to parse
-    tags = ["a","button", "span", "div", "input", "li", "label"]
-    high_priority_tags = ["button", "a"]
-
+    tags = ["a", "button", "span", "div", "input", "li", "label", "textarea"]
+    high_priority_tags = ["a", "button"]
+ 
     # Create an ordered dictionary to store xpaths
     xpath_dictionary = OrderedDict()
-
+ 
     for tag in tags:
         all_elements = soup.find_all(tag)
         index = 1
-
+ 
         for element in all_elements:
             # Create xpaths for high-priority tags
             if tag in high_priority_tags:
@@ -92,7 +95,7 @@ def create_xpaths_from_page_source(html_doc):
                     xpath_dictionary[element_name] = xpath
             else:
                 ancestors = [ancestor.name for ancestor in element.find_parents()]
-
+ 
                 if (
                     not any(parent in ancestors for parent in high_priority_tags)
                     and not element.find()
@@ -101,15 +104,16 @@ def create_xpaths_from_page_source(html_doc):
                     if xpath:
                         node = key_name(element, index)
                         xpath_dictionary[node] = xpath
-
+ 
             index += 1
-
+ 
     return xpath_dictionary
-
-
-def select_xpath_attribute(element : str) -> str:
+ 
+ 
+def select_xpath_attribute(element):
+    """This method selects attribute to make the xpath."""
     tag = element.name
-
+ 
     if element.get("id"):
         attr_value = element.get("id")
         xpath = f"//{tag}[@id='{attr_value}']"
@@ -141,13 +145,14 @@ def select_xpath_attribute(element : str) -> str:
         xpath = f"//{tag}[@type='{attr_value}']"
     else:
         xpath = None
-
+ 
     return xpath
-
-
+ 
+ 
 def key_name(element, index):
+    """This method creates names for the xpaths."""
     key = None
-
+ 
     if element.string and str(element.string).strip():
         key = snake_case_convertor(element.string)
     elif element.get("aria-label"):
@@ -158,67 +163,73 @@ def key_name(element, index):
         key = snake_case_convertor(element.get("onclick"))
     elif element.get("formcontrolname"):
         key = snake_case_convertor(element.get("formcontrolname"))
-    
+ 
+    # Some elements will appear without any name. These elements are named using string
+    # 'delete_this_node_37' so that these elements can be identified later and deleted.
     if element.name == "a":
-        key = key + "_link" if key else "delete_this_node_37" + str(index)
+        key = key + "_link" if key else "delete_this_element_37" + str(index)
     else:
-        key = key + "_" + element.name if key else "delete_this_node_37" + str(index)
-
+        key = key + "_" + element.name if key else "delete_this_element_37" + str(index)
+ 
     return key
-
-
-def clean_generated_xpaths(xpath_dictionary):
+ 
+ 
+def clean_generated_xpaths(xpath_dictionary, user_input):
+    """This method filters final keys and values that will be generated to the user."""
     # Create a list of keys to delete
     keys_to_delete = [
-        key for key in xpath_dictionary.keys() if key.startswith("delete_this_node_37")
+        key
+        for key in xpath_dictionary.keys()
+        if key.startswith("delete_this_element_37")
     ]
-
+ 
     # Remove the keys from the dictionary
     for key in keys_to_delete:
         del xpath_dictionary[key]
-
+ 
+    current_folder = os.path.dirname(os.path.abspath(__file__))
+    if validators.url(user_input):
+        file_name = create_filename_from_url(user_input)
+    else:
+        file_name = create_filename_from_hash(user_input)
+ 
+    locator_file = os.path.join(current_folder, file_name)
+ 
     all_xpaths = [value for value in xpath_dictionary.values() if value]
     unique_xpaths = list(OrderedDict.fromkeys(all_xpaths))
-
+ 
     for xpath in unique_xpaths:
         index = 0
         for key, value in xpath_dictionary.items():
             if xpath == value and all_xpaths.count(xpath) > 1:
                 index += 1
                 xpath_dictionary[key] = f"({xpath})[{index}]"
-
-    
+ 
     return xpath_dictionary
-
-
+ 
+    # Write xpaths to the file
+    # with open(locator_file, "w", encoding="utf-8") as file:
+    #     json.dump(xpath_dictionary, file, indent=4)
+ 
+ 
 def snake_case_convertor(raw_string):
+    """This method converts any string to snake case format"""
     if not isinstance(raw_string, str):
         raw_string = str(raw_string)
-
+ 
     words = "".join(
         char.lower()
         for char in raw_string.strip()
         if char.isalnum() or char == "_" or char == " "
     )
-
+ 
     return words.replace(" ", "_")
-
-def fetch_raw_xpath_dictionary(url,action_type):
-
-    html_doc = open_url(url, action_type)
-
-    # Generate xpaths
-    xpath_dictionary = create_xpaths_from_page_source(html_doc)
-    logger.info("Generated Priority Xpaths for all elements")
-
-    # Clean and write the xpaths to a JSON file
-    xpath_dict = clean_generated_xpaths(xpath_dictionary)
-    logger.info("Cleaned xpaths without intuitive names")
-    return xpath_dict
-
-
+ 
+ 
+ 
+ 
 def get_raw_xpath_dictionary(url:str,action_type:str)->dict:
-    filename = give_cache_file_name(url)
+    filename = create_filename_from_url(url)
     cache_path = os.path.join('xpath_cache', filename)
 
     logger.info(f"cache file name : {filename}")
@@ -228,13 +239,46 @@ def get_raw_xpath_dictionary(url:str,action_type:str)->dict:
         logger.info(f"Loading cached data for {url}") 
         with open(cache_path, 'r') as file:
             return json.load(file)
-    
     # If no cache, fetch and save the data
     logger.info(f"Fetching data for {url}")  
-    data = fetch_raw_xpath_dictionary(url, action_type)
+    
+    is_url = validators.url(url)
+    
+    # validators checks for invalid URL
+    if is_url:
+        html_doc = open_url(url, action_type)
+    else:
+        html_doc = url
+    
+    data = create_xpaths_from_page_source(html_doc)
+    data = clean_generated_xpaths(data, url)
     os.makedirs('xpath_cache', exist_ok=True)  
     with open(cache_path, 'w') as file:
         json.dump(data, file,indent=4)
     
     return data
+ 
+ 
 
+#################################### Code execution starts here #############################
+
+# if __name__ == "__main__":
+#     url = input("Enter the URL: ").strip()
+    
+#     # If user enters an URL, then launch the URL in browser to fetch the DOM structure
+#     # else pasre the DOM structure directly
+    
+#     is_url = validators.url(url)
+    
+#     # validators checks for invalid URL
+#     if is_url:
+#         html_doc = open_url(url)
+#     else:
+#         html_doc = url
+    
+#     # Generate xpaths
+#     xpath_dictionary = create_xpaths_from_page_source(html_doc)
+    
+#     # Clean and write the xpaths to a JSON file
+#     clean_generated_xpaths(xpath_dictionary)
+#     print("Xpath file generated successfully.")

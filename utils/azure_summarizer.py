@@ -161,14 +161,14 @@ def get_work_description(epic_link : str) -> str:
     # Extract work item ID from the epic link
     epic_id = extract_work_item_id(epic_link)
     if not epic_id:
-        print("Invalid epic link or work item ID not found.")
-        return
+        return {"status" : 400 , "message" :"Invalid epic link or work item ID not found."}
+        
  
     # Extract organization name from the epic link
     organization_name = extract_organization_from_epic_link(epic_link)
     if not organization_name:
-        print("Could not extract the organization name from the epic link.")
-        return
+        return {"status" : 400 ,  "message" : "Could not extract the organization name from the epic link."}
+        
  
     # Construct the organization URL
     organization_url = f"https://dev.azure.com/{organization_name}"
@@ -187,7 +187,7 @@ def get_work_description(epic_link : str) -> str:
     
     work_item_str = convert_hierarchy_to_string(hierarchy, work_item_map, epic_id )
     
-    return work_item_str
+    return  {"status" : 200 , "message" :work_item_str}
     
             
 # if __name__ == "__main__":

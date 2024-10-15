@@ -277,6 +277,7 @@ if __name__ == "__main__":
 
     # app = initialize_graph()
     
+    passed_dom = ""
     
     user_input = """
     Background: User login at https://dev-athena.geminisolutions.com/login
@@ -300,6 +301,7 @@ if __name__ == "__main__":
     Then Validate count after unassigning
     """
     
+    dir_name = ""
     print(
         generate_testcases_from_user_story_or_description(user_input, "user story")
     )
