@@ -11,7 +11,7 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
 from logger import logger
-
+import time
 
 
 def create_filename_from_hash(url):
@@ -41,12 +41,21 @@ def open_url(url, action_type):
  
     # Use Selenium to load the page with JavaScript execution
     firefox_options = Options()
-    firefox_options.add_argument("--headless")
+    # firefox_options.add_argument("--headless")
     service = FirefoxService(GeckoDriverManager().install())
  
     driver = webdriver.Firefox(service=service, options=firefox_options)
  
     driver.get(url)
+
+    time.sleep(30)
+    
+    logger.warning("WAITING FOR MANUAL LOGIN")
+    
+    driver.get(url)
+    time.sleep(8)
+    logger.info("Waiting for Page to Load completely")
+    
     driver.maximize_window()
  
     # Wait until the page is fully loaded
@@ -65,7 +74,7 @@ def open_url(url, action_type):
         timer += 1
  
     html_doc = driver.page_source
-    print("HTML extracted successfully")
+    logger.info("Source Code extracted successfully")
  
     driver.quit()
     return html_doc

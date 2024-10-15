@@ -263,7 +263,7 @@ def generate_testcases_from_user_story_or_description(user_input : str, input_ty
         
         # arguments to this function can have `dir_name`, different examples in the data table will be stored in <dir_name>_0,<dir_name>_1,<dir_name>_2 etc
         # hardcoded for now       
-        dir_name = "athena-test-un-assign-learner"    
+        dir_name = "updated-code-for-jira-validation-task"    
         dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
         os.makedirs(dir_path, exist_ok=True)
         
@@ -277,33 +277,13 @@ if __name__ == "__main__":
 
     # app = initialize_graph()
     
-    passed_dom = ""
+    # passed_dom = ""
     
-    user_input = """
-    Background: User login at https://dev-athena.geminisolutions.com/login
-    Given User is at login page
-    And User types in email field: "test123@gmail.com"
-    And User types in password field: "test@123" 
-    And click on sign in
-    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
-    Scenario Outline: Filter and unassign a candidate
-    Given Select "Manage Courses" and "Batches" from sidebar
-    Then Redirect to:https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
-    When Click actions icon of a record "dummy" 
-    And Select "Assign Learners" from actions dropdown
-    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
-    And Expand the "Category" dropdown
-    And Select "EC" from the dropdown
-    And Expand the "selected category" dropdown
-    And Select "QA" from the dropdown
-    And Get assigned learners count
-    And Unassign a learner from the filtered list
-    Then Validate count after unassigning
-    """
+    user_input = "https://gemecosystem.atlassian.net/browse/COM-1265"
     
     dir_name = ""
     print(
-        generate_testcases_from_user_story_or_description(user_input, "user story")
+        generate_testcases_from_user_story_or_description(user_input, "Epic Link")
     )
     
       

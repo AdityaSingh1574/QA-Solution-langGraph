@@ -4,7 +4,6 @@ import implementation.Implementation;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.And;
 
 public class StepDefinition {
     private Implementation implementation = new Implementation();
@@ -14,74 +13,59 @@ public class StepDefinition {
         implementation.launchUrl(url);
     }
 
-    @When("User enters email {string} in the email field")
-    public void userEntersEmail(String email) {
-        implementation.enterEmail(email);
+    @When("User types user id {string}")
+    public void userTypesUserId(String userId) {
+        implementation.enterUserId(userId);
     }
 
-    @And("User enters password {string} in the password field")
-    public void userEntersPassword(String password) {
+    @When("User types password {string}")
+    public void userTypesPassword(String password) {
         implementation.enterPassword(password);
     }
 
-    @And("User clicks the sign in button")
-    public void userClicksSignInButton() {
-        implementation.clickSignInButton();
+    @When("User clicks login button")
+    public void userClicksLoginButton() {
+        implementation.clickLoginButton();
     }
 
-    @Given("User selects {string} from the sidebar")
-    public void userSelectsFromSidebar(String option) {
-        implementation.selectFromSidebar(option);
+    @Then("User should be redirected to the MIS homepage")
+    public void userShouldBeRedirectedToMISHomepage() {
+        implementation.verifyMISHomepage();
     }
 
-    @Then("User should be redirected to the user dashboard page")
-    public void userShouldBeRedirectedToDashboard() {
-        implementation.verifyDashboardRedirect();
+    @Given("User navigates to apply under LNSA")
+    public void userNavigatesToApplyUnderLNSA() {
+        implementation.navigateToApplyLNSA();
     }
 
-    @When("User clicks the actions icon for the {string} record")
-    public void userClicksActionsIcon(String record) {
-        implementation.clickActionsIcon(record);
+    @When("User checks week {int} for LNSA")
+    public void userChecksWeekForLNSA(int weekNumber) {
+        implementation.checkWeekForLNSA(weekNumber);
     }
 
-    @And("User selects {string} from the actions dropdown")
-    public void userSelectsFromActionsDropdown(String option) {
-        implementation.selectFromActionsDropdown(option);
+    @When("User clicks submit button")
+    public void userClicksSubmitButton() {
+        implementation.clickSubmitButton();
     }
 
-    @Then("User should be redirected to the assign learners page")
-    public void userShouldBeRedirectedToAssignLearnersPage() {
-        implementation.verifyAssignLearnersPageRedirect();
+    @Then("User should be redirected to the LNSA application page")
+    public void userShouldBeRedirectedToLNSAApplicationPage() {
+        implementation.verifyLNSAApplicationPage();
     }
 
-    @When("User expands the {string} dropdown")
-    public void userExpandsDropdown(String dropdown) {
-        implementation.expandDropdown(dropdown);
+    @When("User enters the reason {string} in input field")
+    public void userEntersReasonInInputField(String reason) {
+        implementation.enterReason(reason);
     }
 
-    @And("User selects {string} from the Category dropdown")
-    public void userSelectsFromCategoryDropdown(String option) {
-        implementation.selectFromCategoryDropdown(option);
+    @When("User clicks final submit button")
+    public void userClicksFinalSubmitButton() {
+        implementation.clickFinalSubmitButton();
     }
 
-    @And("User selects {string} from the selected category dropdown")
-    public void userSelectsFromSelectedCategoryDropdown(String option) {
-        implementation.selectFromSelectedCategoryDropdown(option);
-    }
-
-    @Then("User gets the assigned learners count")
-    public void userGetsAssignedLearnersCount() {
-        implementation.getAssignedLearnersCount();
-    }
-
-    @When("User unassigns a learner from the filtered list")
-    public void userUnassignsLearner() {
-        implementation.unassignLearner();
-    }
-
-    @Then("User validates the count after unassigning")
-    public void userValidatesCountAfterUnassigning() {
-        implementation.validateCountAfterUnassigning();
+    @Then("the LNSA application should be submitted successfully")
+    public void lnsaApplicationShouldBeSubmittedSuccessfully() {
+        implementation.verifyLNSASubmission();
     }
 
     @Then("close the browser")

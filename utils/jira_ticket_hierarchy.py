@@ -39,14 +39,12 @@ def validate_jira_credentials(jira_base_url, email, api_token):
         response_data = response.json()
 
         if response.status_code == 200:
-            return True
+            return {"status" :  200, "message" : "Jira Login Successful!"}
         else:
-            print(f"Invalid Jira credentials: {response.status_code} - {response_data.get('errorMessages', 'Unknown error')}")
-            return False
+            return {"status" : 400 ,"message" : f"Invalid Jira credentials: {response.status_code} - {response_data.get('errorMessages', 'Unknown error')}"}
     except requests.exceptions.JSONDecodeError:
         # Handle the case where the response is not JSON
-        print(f"Invalid response from Jira when validating credentials. Status Code: {response.status_code}, Response Text: {check_html_content(response.text)}")
-        return False
+        {"status" : 400 , "message" : f"Invalid response from Jira when validating credentials. Status Code: {response.status_code}, Response Text: {check_html_content(response.text)}"}
 
 
 
@@ -96,16 +94,13 @@ def validate_jira_ticket_access(ticket_key, jira_base_url, email, api_token):
         if response.status_code == 200:
             # Additional check to ensure the ticket is part of the given Jira base URL
             if jira_base_url not in response_data.get('self', ''):
-                print(f"The ticket {ticket_key} does not belong to the Jira base URL: {jira_base_url}")
-                return False
-            return True
+                return {"status" : 400, "message" : f"The ticket {ticket_key} does not belong to the Jira base URL: {jira_base_url}"}
+            return {"status" : 200, "message" : "user has access to ticket"}
         else:
-            print(f"Access denied to ticket {ticket_key}: {response.status_code} - {response_data.get('errorMessages', 'Unknown error')}")
-            return False
+            return {"status": 400, "message" :f"Access denied to ticket {ticket_key}: {response.status_code} - {response_data.get('errorMessages', 'Unknown error')}"}
     except requests.exceptions.JSONDecodeError:
         # Handle the case where the response is not JSON
-        print(f"Invalid response from Jira when validating ticket access. Status Code: {response.status_code}, Response Text: {response.text}")
-        return False
+        return {"status" : 400 , "message": f"Invalid response from Jira when validating ticket access. Status Code: {response.status_code}, Response Text: {response.text}"}
 
 
 
@@ -119,10 +114,9 @@ def extract_ticket_key_from_url(jira_url):
     """
     match = re.search(r'/browse/([A-Z]+-\d+)', jira_url)
     if match:
-        return match.group(1)
+        return {"status" : 200 , "message" : match.group(1)}
     else:
-        print("Invalid Jira URL format.")
-        return None
+        return {"status" : 400, "message" : "Invalid Jira URL format."}
 
 def get_ticket_data(ticket_key, jira_base_url, email, api_token):
     """
@@ -151,8 +145,7 @@ def get_ticket_data(ticket_key, jira_base_url, email, api_token):
         ticket_cache[ticket_key] = ticket_data
         return ticket_data
     except requests.exceptions.JSONDecodeError:
-        print(f"Failed to retrieve data for ticket {ticket_key}: Status Code {response.status_code}, Response Text: {response.text}")
-        return None
+        return {"status" : 400 ,"message" : f"Failed to retrieve data for ticket {ticket_key}: Status Code {response.status_code}, Response Text: {response.text}"}
 
 def collect_ticket_information(ticket_key, jira_base_url, email, api_token, parent_ticket=None):
     """
@@ -241,20 +234,26 @@ def get_jira_description(jira_url :str)->str:
     api_token = os.getenv("JIRA_API_TOKEN")
     
     # Extracting ticket key from the URL
-    ticket_key = extract_ticket_key_from_url(jira_url)
-    if not ticket_key:
-        return
+    
+    extracted_tkt_info = extract_ticket_key_from_url(jira_url)
+    
+    if extracted_tkt_info["status"] == 400:
+        return extracted_tkt_info["message"]
 
+    ticket_key = extracted_tkt_info["message"]
     # Extracting Jira base URL from the provided Jira link
     jira_base_url = re.match(r"(https://[^/]+)", jira_url).group(1)
 
     # Step 1: Validate Jira credentials
-    if not validate_jira_credentials(jira_base_url, email, api_token):
-        return
+    validation_info = validate_jira_credentials(jira_base_url, email, api_token)
+    
+    if validation_info["status"] == 400:
+        return validation_info['message']
 
     # Step 2: Validate access to the given Jira ticket (epic link)
-    if not validate_jira_ticket_access(ticket_key, jira_base_url, email, api_token):
-        return
+    validation_access_info = validate_jira_ticket_access(ticket_key, jira_base_url, email, api_token)
+    if validation_access_info["status"] == 400:
+        return validation_access_info["message"]
 
     # Step 3: Collecting ticket information recursively for the ticket and its linked issues
     ticket_details = collect_ticket_information(ticket_key, jira_base_url, email, api_token)

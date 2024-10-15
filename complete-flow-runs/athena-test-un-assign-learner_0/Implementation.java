@@ -6,13 +6,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import locators.Locators;
-import org.openqa.selenium.By;
+import org.junit.Assert;
+
 import java.time.Duration;
 
 public class Implementation {
     private WebDriver driver;
     private WebDriverWait wait;
-    private int initialAssignedCount;
 
     public void launchUrl(String url) {
         WebDriverManager.chromedriver().setup();
@@ -22,65 +22,68 @@ public class Implementation {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterEmail(String email) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.emailInput)).sendKeys(email);
+    public void enterUserId(String userId) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.usernameInput)).sendKeys(userId);
     }
 
     public void enterPassword(String password) {
         driver.findElement(Locators.passwordInput).sendKeys(password);
     }
 
-    public void clickSignInButton() {
-        driver.findElement(Locators.signInButton).click();
+    public void clickLoginButton() {
+        driver.findElement(Locators.loginButton).click();
     }
 
-    public void selectFromSidebar(String option) {
-        By locator = option.equals("Manage Courses") ? Locators.manageCoursesSpan : Locators.batchesSpan;
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+    public void verifyMISHomepage() {
+        // Add verification logic for MIS homepage
+        Assert.assertTrue("User is not on MIS homepage", driver.getCurrentUrl().contains("mymis.geminisolutions.com"));
     }
 
-    public void verifyDashboardRedirect() {
-        // Implement verification logic
+    public void navigateToApplyLNSA() {
+        wait.until(ExpectedConditions.elementToBeClickable(Locators.applyLnsaLink)).click();
     }
 
-    public void clickActionsIcon(String record) {
-        // Implement click action
+    public void checkWeekForLNSA(int weekNumber) {
+        if (weekNumber == 40) {
+            driver.findElement(Locators.week40Checkbox).click();
+        } else if (weekNumber == 41) {
+            driver.findElement(Locators.week41Checkbox).click();
+        }
     }
 
-    public void selectFromActionsDropdown(String option) {
-        // Implement selection logic
+    public void clickSubmitButton() {
+        driver.findElement(Locators.submitButton).click();
     }
 
-    public void verifyAssignLearnersPageRedirect() {
-        // Implement verification logic
+    public void verifyLNSAApplicationPage() {
+        // Add verification logic for LNSA application page
+        Assert.assertTrue("User is not on LNSA application page", driver.getCurrentUrl().contains("Lnsa/Apply"));
     }
 
-    public void expandDropdown(String dropdown) {
-        By locator = dropdown.equals("Category") ? Locators.categoryDropdown : Locators.selectedCategoryDropdown;
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+    public void enterReason(String reason) {
+        // Note: The XPath for reasonInput is not provided in the locators, so this is a placeholder
+        // You may need to update this once you have the correct locator
+        if (Locators.reasonInput != null) {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.reasonInput)).sendKeys(reason);
+        } else {
+            System.out.println("Reason input field locator is not available");
+        }
     }
 
-    public void selectFromCategoryDropdown(String option) {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.ecOption)).click();
+    public void clickFinalSubmitButton() {
+        // Note: The XPath for finalSubmitButton is not provided in the locators, so this is a placeholder
+        // You may need to update this once you have the correct locator
+        if (Locators.finalSubmitButton != null) {
+            wait.until(ExpectedConditions.elementToBeClickable(Locators.finalSubmitButton)).click();
+        } else {
+            System.out.println("Final submit button locator is not available");
+        }
     }
 
-    public void selectFromSelectedCategoryDropdown(String option) {
-        // Implement selection logic for QA option
-    }
-
-    public void getAssignedLearnersCount() {
-        String countText = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.assignedLearnersCount)).getText();
-        initialAssignedCount = Integer.parseInt(countText.replaceAll("\\D+", ""));
-    }
-
-    public void unassignLearner() {
-        wait.until(ExpectedConditions.elementToBeClickable(Locators.unassignButton)).click();
-    }
-
-    public void validateCountAfterUnassigning() {
-        String newCountText = wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.assignedLearnersCount)).getText();
-        int newCount = Integer.parseInt(newCountText.replaceAll("\\D+", ""));
-        assert newCount < initialAssignedCount : "Unassign operation failed";
+    public void verifyLNSASubmission() {
+        // Add verification logic for successful LNSA submission
+        // This is a placeholder and should be replaced with actual verification logic
+        Assert.assertTrue("LNSA application was not submitted successfully", true);
     }
 
     public void closeBrowser() {

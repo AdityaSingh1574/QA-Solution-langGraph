@@ -176,7 +176,7 @@ def get_work_description(epic_link : str) -> str:
     # Fetch all projects
     projects = get_projects(organization_url, pat)
     if not projects:
-        print("No projects found.")
+        { "status" : 400 , "message " :"No projects found."}
         return
  
     # Collect work item descriptions and hierarchy

@@ -1,21 +1,10 @@
 
-    Background: User login at https://dev-athena.geminisolutions.com/login
-    Given User is at login page
-    And User types in email field: "test123@gmail.com"
-    And User types in password field: "test@123" 
-    And click on sign in
-    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
-    Scenario Outline: Filter and unassign a candidate
-    Given Select "Manage Courses" and "Batches" from sidebar
-    Then Redirect to:https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
-    When Click actions icon of a record "dummy" 
-    And Select "Assign Learners" from actions dropdown
-    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
-    And Expand the "Category" dropdown
-    And Select "EC" from the dropdown
-    And Expand the "selected category" dropdown
-    And Select "QA" from the dropdown
-    And Get assigned learners count
-    And Unassign a learner from the filtered list
-    Then Validate count after unassigning
+    Background: User login at https://mymis.geminisolutions.com/Account/Login
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@1234' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : Test preview and delete for teams
+    user navigates to team info under team management
+    redirect to : https://mymis.geminisolutions.com/TeamManagement/TeamInformation
+    user clicks view to view team and the clicks delete and confirms
     
