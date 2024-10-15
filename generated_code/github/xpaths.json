@@ -1,7 +1,0 @@
-{
-    "search button" : "/html/body/div[1]/div[1]/header/div/div[2]/div[1]/qbsearch-input/div[1]/div[1]/div/div/button",
-    "search input" : "//*[@id="query-builder-test"]",
-    "first repo name" : "/html/body/div[1]/div[5]/main/react-app/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[4]/div/div/div[1]/div/div[1]/h3/div/div[2]/a/span",
-    "second repo name" : "/html/body/div[1]/div[5]/main/react-app/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[4]/div/div/div[2]/div/div[1]/h3/div/div[2]/a/span",
-    "third repo name" : "/html/body/div[1]/div[5]/main/react-app/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/div[4]/div/div/div[3]/div/div[1]/h3/div/div[2]/a/span"
-}

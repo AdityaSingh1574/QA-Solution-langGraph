@@ -107,13 +107,268 @@
     redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/ManageClient
     user searches for "PIMCO" 
 
+    Background: User login at https://mymis.geminisolutions.com/Account/Login
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@123' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : test  multiple funcitonalities on feedback page
+    user navigates to 'quaterly feedback' under ec-dc management
+    redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/NineBox
+    selects the first option from fianancial year and selects Finadvisor from Deleivery council
+    change the number of entries to 50
+    clicks on export to download
+    clicks on user manual
 
     Background: User login at https://mymis.geminisolutions.com/Account/Login
     User Types user id : 'webadmin'
     User types password : 'Gemini@123' and logs in
     redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline : Test  
-    user navigates to 
-    redirect to : 
-    
-    
+    Scenario Outline : test  multiple funcitonalities on feedback page
+    user navigates to 'quaterly feedback' under ec-dc management
+    redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/NineBox
+    user clicks on user view and selects the first option from fianancial year
+    usser navigates to hr view and opens opens extend or change time line option
+    Background: User login at https://mymis.geminisolutions.com/Account/Login
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@123' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : 
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate count on assigning learner
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And Assign a learner with email "egwuyrx@gmail.com"
+    And click on "assign selected" button 
+    And Confirm assignment by clicking the "Yes" button
+    Then Validate count after assigning
+    And Message displayed: "Learner added successfully to the batch"
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate count on assigning learner
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And Assign a learner with email "egwuyrx@gmail.com"
+    And click on "assign selected" button 
+    And Confirm assignment by clicking the "Yes" button
+    Then Validate count after assigning
+    And Message displayed: "Learner added successfully to the batch"
+
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate count on unassigning learner
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And unassign a learner with email "egwuyrx@gmail.com"
+    And click on "unassign selected" button
+    And Confirm assignment by clicking the "Yes" button
+    Then Validate count after unassigning
+    And Message displayed: "Learner removed successfully from the batch"
+
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate assign selected
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And Select an unassigned learner from current page
+    And Go to next page
+    And Select an unassigned learner
+    And Click "Assign Selected" button
+    And Confirm assignment by clicking the "Yes" button
+    Then Validate count after assigning learners from multiple pages
+    And Message displayed: "All learners added successfully"
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Filter by status
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And Expand the "Status" dropdown
+    And Select "Assigned" from the dropdown
+    Then Validate records filtered by status "Assigned"
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Filter by category
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Get assigned learners count
+    And Expand the "Category" dropdown
+    And Select "EC" from the dropdown
+    And Expand the "selected category" dropdown
+    And Select "QA" from the dropdown
+    Then Validate records filtered by category "EC" and subcategory "QA"
+
+    Background: User login at https://dev-athena.geminisolutions.com/login
+    Given User is at login page
+    And User types in email field: "test123@gmail.com"
+    And User types in password field: "test@123" 
+    And click on sign in
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Filter and unassign a candidate
+    Given Select "Manage Courses" and "Batches" from sidebar
+    Then Redirect to:https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a record "dummy" 
+    And Select "Assign Learners" from actions dropdown
+    Then Redirect to: https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches/assign-learners/Ng%3D%3D
+    And Expand the "Category" dropdown
+    And Select "EC" from the dropdown
+    And Expand the "selected category" dropdown
+    And Select "QA" from the dropdown
+    And Get assigned learners count
+    And Unassign a learner from the filtered list
+    Then Validate count after unassigning
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    Scenario: Hartron TestControl Verify HSC Examination And Exam Template Navigation
+    User navigates to test controls under tests     
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Given user is on TestControl screen
+    Then Verify if user is on HSC Examination screen 
+    Then navigate to Exam Template Management and verify if user is on that screen
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario Outline: Hartron TestControl Verify if User Navigated To "<Screen Name>":
+    Given user is on TestControl screen
+    When click on Actions
+    Then verify if "<Action Data>" exists in action menu by clicking on it
+    And verify if user is navigated to "<Screen Name>"
+    Examples:
+    |Screen Name        | Action Data         |
+    |Candidate(s) Report| Candidate Report    |
+    |Evaluate Candidate | Evaluate Candidate  |
+    |Test Summary       | Test Summary        |
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Verify Export Test Data Functionality
+    Given user is on TestControl screen
+    When click on Export test data button
+    And verify if download button exists
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Search By Name/Tag Verify Records
+    Given user is on TestControl screen
+    When enter search text in Search by <course-name>
+    Then verify if records are filtered by checking the count of courses
+    |course-name    |
+    |Core Java      |
+    |Python         |
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Click On Section Name Verify Records Are Sorted
+    Given user is on TestControl screen
+    When click on Name section
+    Then verify if section is getting sorted in increasing form by printing first 3 Names
+
+    Background: User Selects Email option for login at https://athena-hartron-dev.geminisolutions.com/login
+    User Types Email : 'sivapuja.pasupulati@geminisolutions.com'
+    User types password : 'Siva@123' and clicks on Login button
+    redirect to : https://athena-hartron-dev.geminisolutions.com/
+    User clicks on the hanmburger button
+    User Clicks on Tests dropdown
+    user selects Test controls 
+    redirect to : https://athena-hartron-dev.geminisolutions.com/athena/admin/tests/test-control
+    Scenario: Hartron TestControl Verify Test Details Screen In Test Management
+    Given user is on TestControl screen
+    When click on first Test get test details
+    Then verify if test details screen is displayed and print the test url
+
+
+
+    Feature: Assign learner to batch
+    Background:  Navigate to login page at https://dev-athena.geminisolutions.com/login
+    And Login using "test123@gmail.com" and "test@123"
+    redirect to  :https://dev-athena.geminisolutions.com/athena/admin/user-dashboard
+    Scenario Outline: Validate count on assigning learner
+    Given Select "<module>", "<submodule>" from sidebar
+    redirect to  : https://dev-athena.geminisolutions.com/athena/admin/manage-courses/batches
+    When Click actions icon of a batch
+    And Select "Assign Learners" from actions dropdown for <batch>
+    And Get assigned learners count
+    And Assign a <learner>
+    Then Validate count after assigning
+    Examples:
+    |module        |submodule|learner|bactch| message                                |
+    |Manage Courses|Batches  |dummy |dummy|Learner added successfully to the batch|

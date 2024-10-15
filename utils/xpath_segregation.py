@@ -10,7 +10,7 @@ from prompts.segregation_utility import XPATH_SEGREGATION_PROMPT
 
 
 
-def filter_xpaths(extracted_xpaths,reference_xpaths):
+def filter_xpaths(extracted_xpaths: dict,reference_xpaths: dict) -> dict:
     
     final_xpaths = dict(extracted_xpaths)
     
@@ -24,7 +24,7 @@ def filter_xpaths(extracted_xpaths,reference_xpaths):
     return  final_xpaths
 
 
-def xpath_segregator(action, element_xpaths):
+def xpath_segregator(action:str, element_xpaths:dict)->dict:
 
     logger.info("Started Xpath Segregation")
     

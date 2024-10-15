@@ -1,5 +1,6 @@
 WORK_ITEM_TO_FF_AZURE_JIRA_DESC = """
-    You will be given detailed descriptions of development tasks, convert each description into a scenario outline for testing the user interactions on the specified website. 
+    You will be given detailed descriptions of tasks assigned to different people as a part of discussion for testing a website for Quality assurance.
+    Your task will be to convert each description into a scenario outline for testing the user interactions on the specified website. 
 
     The detailed description is given between `---DESCRIPTION-START---` and `---DESCRIPTION-END---`
 
@@ -8,22 +9,27 @@ WORK_ITEM_TO_FF_AZURE_JIRA_DESC = """
     ---DESCRIPTION-END---
 
     You need to follow the below instructions for completing the task:
+    1. Go through the task description and identify the steps that need to be covered for generating a scenario outline, it can be divided into 2 steps background : which will contain the steps to be done before performing the main task like login or sign-in and Scenario outline : which contains the steps to be performed for testing the main functionality described in the task description, if there are no steps to be assigned to the background then make only the scenario outline
+    2. Use the task description to identify single action steps for the background and for the scenario outline : single action step means each step containing just a single action 
+    3. Using the task description also identify and mention the URLs to which user will get redirected while performing the steps and mention it after the single action step in which redirection occurs.
+    
+    Important instructions:  
     1. Identify the Website URL: Extract and highlight the website URL if mentioned, and use it as the base context for all scenarios.
     2. Identify the overall action that has to be completed using the description1
-    2. Outline the User Journey: The descriptions must be consolidated into one summary containing all the necessary steps that need to be followed to complete the overall task that has to be completed, the steps must be neither too less nor too more.
-    3. Specify Actual Names and Identifiers:
+    3. Outline the User Journey: The descriptions must be consolidated into one summary containing all the necessary steps that need to be followed to complete the overall task that has to be completed, the steps must be neither too less nor too more.
+    4. Specify Actual Names and Identifiers:
     - Clearly name any buttons, links, or placeholders mentioned in the description. Use quotes to denote the exact labels or text on these UI elements.
     - If specific items are to be interacted with (like 'Noir Jacket' or 'Grey Jacket'), use these exact names in the scenario outline.
-    4. Include Examples for Multiple Cases: If the task involves multiple items or variations, include a table of examples at the end of the scenario. Each row should represent a different case, clearly listing any relevant specifics like item names.
-    5. Return only the summarization with the tasks, ignore adding anything additional like additional checks, etc 
+    4. Include Examples for Multiple Cases: If the task involves multiple items or variations, include a table of examples at the end of the scenario. Each row should represent a different case, clearly listing any relevant specifics like item names. Mention the item name for which example is given as a variable enclosed in < and >, include the examples section only if it is required else dont include it.
+    5. Return only the summarization with the tasks, do not return anything else, start with background section and end with example section (if it is required, else end with the scenario section)
     
     **Example Input**:
     "Implement and test the user interaction on the landing page of https://sauce-demo.myshopify.com/ to ensure that when a user clicks on an item name (e.g., Noir Jacket : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket ), they are redirected to the respective product page. This involves adjusting the UI to make item names clickable and ensuring that the redirect functionality is correctly set up. Acceptance Criteria: Clicking on an item name on the landing page redirects to the product page. Ensure compatibility with major browsers (Chrome, Firefox, Safari). UI elements should be accessible and responsive."
 
     **Example Output**:
-    Scenario outline: Perform item selection on https://sauce-demo.myshopify.com/
-    Given user is on the landing page of website https://sauce-demo.myshopify.com/
-    When user clicks on the 'Noir Jacket' on the landing page
+    Scenario outline : Test item selection on sauce-demo-shopify
+    User is on the landing page : https://sauce-demo.myshopify.com/
+    When user clicks on the 'Noir jakcet' on the landing page
     Then user is redirected to the product page : https://sauce-demo.myshopify.com/collections/frontpage/products/noir-jacket
 
 

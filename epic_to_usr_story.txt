@@ -1,0 +1,10 @@
+
+    Background: User login at https://mymis.geminisolutions.com/Account/Login
+    User Types user id : 'webadmin'
+    User types password : 'Gemini@1234' and logs in
+    redirect to : https://mymis.geminisolutions.com/
+    Scenario Outline : Test preview and delete for teams
+    user navigates to team info under team management
+    redirect to : https://mymis.geminisolutions.com/TeamManagement/TeamInformation
+    user clicks view to view team and the clicks delete and confirms
+    

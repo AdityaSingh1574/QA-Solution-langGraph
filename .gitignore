@@ -167,4 +167,5 @@ coding/
 testing/
 test_cases/
 .env
+test.txt
 new.py

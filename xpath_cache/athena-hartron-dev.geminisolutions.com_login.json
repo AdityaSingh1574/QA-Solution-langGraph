@@ -1,7 +1,0 @@
-{
-    "login_button": "//button[contains(text(), 'LOGIN')]",
-    "bindings_div": "//div[contains(text(), 'bindings={}')]",
-    "login_via__label": "//label[contains(text(), 'Login via :')]",
-    "enrollment_no_label": "//label[contains(text(), 'Enrollment No*')]",
-    "password_label": "//label[contains(text(), 'Password*')]"
-}

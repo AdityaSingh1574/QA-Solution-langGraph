@@ -4,7 +4,7 @@ Feature: Access Card Management on MyMIS
   Background:
     Given User is on the MyMIS login page "https://mymis.geminisolutions.com/Account/Login"
     When User enters user id "webadmin" in the user id input field
-    And User enters password "Gemini@123" in the password input field
+    And User enters password "Gemini@1234" in the password input field
     And User clicks on the login button
 
   Scenario: Export, Copy, Download Excel, and Print Access Cards

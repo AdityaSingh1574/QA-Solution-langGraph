@@ -4,7 +4,7 @@ Feature: Asset Management on MIS Portal
   Background: User Authentication
     Given User is on the MIS login page "https://mymis.geminisolutions.com/Account/Login"
     When User enters user id "webadmin" in the username field
-    And User enters password "Gemini@123" in the password field
+    And User enters password "Gemini@1234" in the password field
     And User clicks on the login button
     Then User should be logged in successfully
 

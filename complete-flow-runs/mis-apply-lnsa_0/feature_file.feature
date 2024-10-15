@@ -4,7 +4,7 @@ Feature: Apply for LNSA on MIS Portal
   Background:
     Given User is on the MIS login page "https://mymis.geminisolutions.com/Account/Login"
     When User types user id "webadmin"
-    And User types password "Gemini@123"
+    And User types password "Gemini@1234"
     And User clicks login button
 
   Scenario: Apply for LNSA for Week 40 and 41

@@ -6,7 +6,7 @@ Feature: Access Card Management and User Card Mapping
 Scenario: Log in and search for a user in User Card Mapping
   Given I am on the login page
   When I enter the username "webadmin"
-  And I enter the password "Gemini@123"
+  And I enter the password "Gemini@1234"
   And I click the login button
   Then I should be logged in successfully
   When I navigate to "Access Card Management"

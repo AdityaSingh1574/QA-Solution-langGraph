@@ -4,7 +4,7 @@ Feature: Manage Policies on MIS Portal
   Background:
     Given User is on the login page "https://mymis.geminisolutions.com/Account/Login"
     When User types user id "webadmin"
-    And User types password "Gemini@123"
+    And User types password "Gemini@1234"
     And User clicks login button
     Then User should be redirected to the homepage
 

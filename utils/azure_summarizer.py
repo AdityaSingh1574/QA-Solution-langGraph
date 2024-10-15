@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import json
 from dotenv import load_dotenv
 import os
-from utils.llm_call import call_anthropic_model
 
 
 load_dotenv()
@@ -134,21 +133,26 @@ def collect_work_item_descriptions_and_hierarchy(projects, organization_url, wor
  
     return work_item_map, hierarchy
  
-def print_hierarchy(hierarchy, work_item_map, work_item_id=None, level=0):
+def convert_hierarchy_to_string(hierarchy, work_item_map, work_item_id=None, level=0) -> str:
     """Print the hierarchy tree with descriptions."""
     indent = "  " * level
+    
+    hrrchy_to_return = ""
+    
     if work_item_id is None:
         # Print top-level items (those without a parent)
         for top_level_item in hierarchy.get(None, []):
-            print(f"{indent}Work Item ID: {top_level_item}\n{work_item_map.get(top_level_item, '')}\n")
-            print_hierarchy(hierarchy, work_item_map, top_level_item, level + 1)
+            hrrchy_to_return += f"{indent}Work Item ID: {top_level_item}\n{work_item_map.get(top_level_item, '')}\n"
+            hrrchy_to_return += convert_hierarchy_to_string(hierarchy, work_item_map, top_level_item, level + 1)
     else:
         # Print child items
         for child_item in hierarchy.get(work_item_id, []):
-            print(f"{indent}Work Item ID: {child_item}\n{work_item_map.get(child_item, '')}\n")
-            print_hierarchy(hierarchy, work_item_map, child_item, level + 1)
+            hrrchy_to_return += f"{indent}Work Item ID: {child_item}\n{work_item_map.get(child_item, '')}\n"
+            hrrchy_to_return +=  convert_hierarchy_to_string(hierarchy, work_item_map, child_item, level + 1)
+    
+    return hrrchy_to_return
  
-def get_work_description(epic_link):
+def get_work_description(epic_link : str) -> str:
     
     pat = os.getenv("PAT_USER")
     # Remove trailing slash from epic link
@@ -157,14 +161,14 @@ def get_work_description(epic_link):
     # Extract work item ID from the epic link
     epic_id = extract_work_item_id(epic_link)
     if not epic_id:
-        print("Invalid epic link or work item ID not found.")
-        return
+        return {"status" : 400 , "message" :"Invalid epic link or work item ID not found."}
+        
  
     # Extract organization name from the epic link
     organization_name = extract_organization_from_epic_link(epic_link)
     if not organization_name:
-        print("Could not extract the organization name from the epic link.")
-        return
+        return {"status" : 400 ,  "message" : "Could not extract the organization name from the epic link."}
+        
  
     # Construct the organization URL
     organization_url = f"https://dev.azure.com/{organization_name}"
@@ -172,7 +176,7 @@ def get_work_description(epic_link):
     # Fetch all projects
     projects = get_projects(organization_url, pat)
     if not projects:
-        print("No projects found.")
+        { "status" : 400 , "message " :"No projects found."}
         return
  
     # Collect work item descriptions and hierarchy
@@ -181,7 +185,9 @@ def get_work_description(epic_link):
     
     work_item_map, hierarchy = collect_work_item_descriptions_and_hierarchy(projects, organization_url, epic_id, pat)
     
-    return work_item_map, hierarchy
+    work_item_str = convert_hierarchy_to_string(hierarchy, work_item_map, epic_id )
+    
+    return  {"status" : 200 , "message" :work_item_str}
     
             
 # if __name__ == "__main__":
