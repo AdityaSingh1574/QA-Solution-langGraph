@@ -8,28 +8,88 @@ from utils.llm_call import call_anthropic_model
 from  prompts.initial_router import ROUTER_PROMPT
 from json_repair import repair_json
 import json
+from utils.llm_call import call_anthropic_model
+from user_stories import user_stories, dir_names
+from app import generate_testcases_from_user_story_or_description
+
 if __name__ == "__main__":
     
-    input_text = """
-    Background: User login at https://mymis.geminisolutions.com/Account/Login
-    User Types user id : 'webadmin'
-    User types password : 'Gemini@123' and logs in
-    redirect to : https://mymis.geminisolutions.com/
-    Scenario Outline : Test adding client 
-    user navigates to client management under ec-dc management
-    redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/ManageClient
-    user adds the client and fills the information client name, address, city and country and adds it
-    """
+
+    # text = ""
+    # for index, user_story in enumerate(user_stories):
+    #     text + f"{dir_names[index]} \n {user_story}"
+    #     text += "\n"
+    
+    # print(text)
+        
+    # with open("user_stories.txt", "w") as f:
+    #     f.write(text)
+    
+    # if len(user_stories) == len(dir_names):
+    #     print("true")
     
     
-    llm_output = call_anthropic_model(
-        prompt=ROUTER_PROMPT.format(input_text=input_text)
-    )
+    
+    for index, user_story in enumerate(user_stories):
+        
+        # prompt = f"""
+        # Generate a folder name for the following user story, use the name of the website for the start, the actions for the middle and end
+        
+        # {user_story}
+        
+        # Use the following example to complete the task:
+        
+        # input user story: 
+            
+        # Background: User login at https://mymis.geminisolutions.com/Account/Login
+        # User Types user id : 'webadmin'
+        # User types password : 'Gemini@123' and logs in
+        # redirect to : https://mymis.geminisolutions.com/
+        # Scenario Outline : Test adding client 
+        # user navigates to client management under ec-dc management
+        # redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/ManageClient
+        # user adds the client and fills the information client name, address, city and country and adds it 
+
+        # Output folder name:
+        
+        # `mis-add-client-ec-dc`
+        
+        # Important instructions
+        # 1. Return only the file name nothing else 
+        
+        # """
+        
+        # print(
+        #     call_anthropic_model(prompt=prompt)
+        # )
+        
+        
+        dir_name = dir_names[index]
+        print(
+            generate_testcases_from_user_story_or_description(user_story, "user story", dir_name)
+        )
     
     
-    json_extracted = repair_json(llm_output)
+#     input_text = """
+#     Background: User login at https://mymis.geminisolutions.com/Account/Login
+#     User Types user id : 'webadmin'
+#     User types password : 'Gemini@123' and logs in
+#     redirect to : https://mymis.geminisolutions.com/
+#     Scenario Outline : Test adding client 
+#     user navigates to client management under ec-dc management
+#     redirect to : https://mymis.geminisolutions.com/EcDcHierarchy/ManageClient
+#     user adds the client and fills the information client name, address, city and country and adds it
+#     """
     
-    print(json.loads(json_extracted))
+    
+#     llm_output = call_anthropic_model(
+#         prompt=ROUTER_PROMPT.format(input_text=input_text)
+#     )
+    
+    
+#     json_extracted = repair_json(llm_output)
+    
+#     print(json.loads(json_extracted))
     
     # with open("input.txt", "r") as f:
     #     sachin_text = f.read()

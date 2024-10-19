@@ -262,9 +262,9 @@ def generate_testcases_from_user_story_or_description(user_input : str, input_ty
         refined_user_story = refined_user_story_list[index]
         
         # arguments to this function can have `dir_name`, different examples in the data table will be stored in <dir_name>_0,<dir_name>_1,<dir_name>_2 etc
-        # hardcoded for now       
-        dir_name = "updated-code-for-jira-validation-task"    
-        dir_path = os.path.join("complete-flow-runs",f"{dir_name}_{index}")
+        # # hardcoded for now       
+        # dir_name = "updated-code-for-jira-validation-task"    
+        dir_path = os.path.join("runs-17-10-2024",f"{dir_name}")
         os.makedirs(dir_path, exist_ok=True)
         
         # can be used for showing this on frontend

@@ -77,14 +77,25 @@ GENERATION_PROMPT_STD_IMP = """
         }}
 
         Important instructions:
-        1. Save the code for the implementation and step definition files using a simple python script, do not use terminal for writing in files.
-        2. The Xpaths given are accurate hence do not generate on your own
-        3. Do not use chromedriver.exe for accessing the browser instead use WebDriverManager library for the same. 
-        4. Include waiting time if the code needs to redirect to some other page and a wait time is required for successful code execution
-        5. Ensure the step definition file contains launchUrl and closeBrowser methods.
-        6. Keep the JAVA code for implementation file between separators `---IMPLEMENTATION-FILE-START---` and `---IMPLEMENTATION-FILE-END---`
-        7. Keep the JAVA code for step-definition file between separators `---STEP-DEFINITION-FILE-START---` and `---STEP-DEFINITION-FILE-END---`
-        8. Return only the JAVA code with the separators and nothing else.
-        9. include the package lines: package stepdefinitions and package implementations in relevant file codes
-        10. The class names have to be strictly the names : StepDefinition and Implementation in relevant file codes
+        1. The Xpaths given are accurate hence do not generate on your own
+        2. Do not use chromedriver.exe for accessing the browser instead use WebDriverManager library for the same. 
+        3. Include waiting time if the code needs to redirect to some other page and a wait time is required for successful code execution
+        4. Use WebDriverWait to ensure that the element is clickable before interacting with it.
+        5. If the element takes time to be present on the DOM before becoming clickable, first wait for the presence of the element, then check if it's clickable.Use ExpectedConditions.presenceOfElementLocated Before clickable.
+        6. The element may not be visible immediately after being loaded in the DOM. You can first check if the element is present in the DOM and then wait for its visibility.Use presenceOfElementLocated Before visibilityOfElementLocated
+        7. While generating the code for the functions in implementation file make sure to first make an instance of the elements and then perform actions using methods for the instance.
+        You can use the following example for reference
+        public void navigateToTeamInfo() {{
+            WebElement teamManagementElement = wait.until(ExpectedConditions.elementToBeClickable(Locators.teamManagementSpan));
+            teamManagementElement.click();
+            WebElement teamInfoElement = wait.until(ExpectedConditions.elementToBeClickable(Locators.teamInformationLink));
+            teamInfoElement.click();
+        }}
+        8. Add a wait to make sure the page or particular elements are fully loaded before trying to click.
+        9. Ensure the step definition file contains launchUrl and closeBrowser methods.
+        10. Keep the JAVA code for implementation file between separators `---IMPLEMENTATION-FILE-START---` and `---IMPLEMENTATION-FILE-END---`
+        11. Keep the JAVA code for step-definition file between separators `---STEP-DEFINITION-FILE-START---` and `---STEP-DEFINITION-FILE-END---`
+        12. Return only the JAVA code with the separators and nothing else.
+        13. include the package lines: package stepdefinitions and package implementations in relevant file codes
+        14. The class names have to be strictly the names : StepDefinition and Implementation in relevant file codes
         """
