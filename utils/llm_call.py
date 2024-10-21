@@ -94,34 +94,18 @@ def call_anthropic_model(
         ],
     }
 
-    # # Convert the native request to JSON.
     request = json.dumps(native_request)
 
-    # # Invoke the model with the request.
-    streaming_response = client.invoke_model_with_response_stream(
-        modelId=model, body=request
-    )
-
-
-    output=""
-    # Extract and print the response text in real-time.
-    for event in streaming_response["body"]:
-        chunk = json.loads(event["chunk"]["bytes"])
-        if chunk["type"] == "content_block_delta":
-            output += chunk["delta"].get("text", "")
-            # print(chunk["delta"].get("text", ""), end="")
+    response = client.invoke_model(body=request, modelId=model)
+    llm_response = json.loads(response.get('body').read())
 
     llm_output = {
-    "response_generated": output,
-    "finish_reason": "stop",
-    "token_usage": {
-        "completion_tokens": "2048",
-        "prompt_tokens": "2048",
-        "total_tokens": "4096",
-    },
-}
+        "response_generated":llm_response["content"][0]["text"],
+        "token_usage": {
+            "completion_tokens": llm_response["usage"]["input_tokens"],
+            "prompt_tokens": llm_response["usage"]["output_tokens"],
+            "total_tokens":llm_response["usage"]["input_tokens"]+ llm_response["usage"]["output_tokens"] ,
+        },
+    }
 
     return llm_output["response_generated"]
-
-
-

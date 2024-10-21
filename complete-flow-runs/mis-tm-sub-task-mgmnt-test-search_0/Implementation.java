@@ -33,10 +33,15 @@ public class Implementation {
         driver.findElement(Locators.loginButton).click();
     }
 
+<<<<<<< HEAD
+    public void verifyHomepage() {
+        wait.until(ExpectedConditions.urlContains("Home"));
+=======
     public void navigateToManageTeamTask(String menuItem) {
         // Implementation depends on the actual structure of the page
         // This is a placeholder
         System.out.println("Navigating to " + menuItem);
+>>>>>>> 85e14be2bc9d6256e7a3058e34f4e0434adc401d
     }
 
     public void verifyRedirectionToHomepage() {
@@ -48,6 +53,22 @@ public class Implementation {
         wait.until(ExpectedConditions.elementToBeClickable(Locators.manageTaskTeamLink)).click();
     }
 
+<<<<<<< HEAD
+    public void verifyManageTaskTeamPage() {
+        wait.until(ExpectedConditions.urlContains("ManageTaskTeam"));
+    }
+
+    public void changeEntries(int entries) {
+        // Implementation for changing entries
+        // Note: Locator for entries dropdown is not provided, so this is a placeholder
+        System.out.println("Changing entries to " + entries);
+    }
+
+    public void enterSearchInput(String searchText) {
+        // Implementation for entering search input
+        // Note: Locator for search input is not provided, so this is a placeholder
+        System.out.println("Entering search text: " + searchText);
+=======
     public void changeEntries(int entries) {
         // Implementation depends on the actual structure of the dropdown
         // This is a placeholder
@@ -56,15 +77,25 @@ public class Implementation {
 
     public void searchFor(String searchTerm) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchInput)).sendKeys(searchTerm);
+>>>>>>> 85e14be2bc9d6256e7a3058e34f4e0434adc401d
     }
 
     public void pressEnter() {
-        driver.findElement(Locators.searchInput).sendKeys(Keys.ENTER);
+        // Implementation for pressing enter
+        // Note: Locator for search input is not provided, so this is a placeholder
+        System.out.println("Pressing Enter key");
     }
 
+<<<<<<< HEAD
+    public void verifyFilteredResults(String searchText) {
+        // Implementation for verifying filtered results
+        // Note: This is a placeholder as we don't have specific locators for results
+        System.out.println("Verifying filtered results for: " + searchText);
+=======
     public void verifySearchResults(String searchTerm) {
         // Implement verification logic
         System.out.println("Verifying search results for " + searchTerm);
+>>>>>>> 85e14be2bc9d6256e7a3058e34f4e0434adc401d
     }
 
     public void closeBrowser() {
