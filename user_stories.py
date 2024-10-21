@@ -246,9 +246,238 @@ Background: User login at https://mymis.geminisolutions.com/Account/Login
 User Types user id : 'webadmin'
 User types password : 'Gemini@1234' and logs in
 redirect to : https://mymis.geminisolutions.com/
-Scenario Outline : 
+Scenario Outline : Test add appraisal cycle
+user navigates to appraisal cycle in appraisal
+redirect to : https://mymis.geminisolutions.com/AppraisalManagement/AppraisalCycle
+user adds new appraisal cycle and selects country as india, year as 2021 and month as july 
+user saves the appraisal cycle
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test update appraisal cycle
+user navigates to appraisal cycle in appraisal
+redirect to : https://mymis.geminisolutions.com/AppraisalManagement/AppraisalCycle
+user updates the first appraisal cycle and selects the appraisal month as 2023
+user saves the appraisal cycle
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test delete appraisal cycle
+user navigates to appraisal cycle in appraisal
+redirect to : https://mymis.geminisolutions.com/AppraisalManagement/AppraisalCycle
+user deletes the first appraisal cycle and confirms deleting it.
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add new parameter
+user navigates to parameter master under appraisal
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/ParameterMaster
+user adds new parameter and selects competency as `Behavioral` and names paramter as `test123` and selects weightage as `3`
+user Adds the new parameter
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add new parameter
+user navigates to parameter master under appraisal
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/ParameterMaster
+user selects  `Behavioral` in for competenty and year as `2017` and status as `Active` and then clicks on search 
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test search appraisal setting
+user navigates to parameter master under appraisal
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/ParameterMaster
+user selects appraisal cycle as  `April 2022` , location as `Canan Tower`, Vertical as `Gemini solutions`, Division, department and team are left as default
+User selects Designation as `Senior Software Engineer L2` only and then searches it.
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test search competency form
+user navigates to competency form under appraisal management
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/CompetencyForm
+user selects appraisal cycle as  `April 2022` , location as `Canan Tower`, Vertical as `Gemini solutions`, Division, department and team are left as default
+User selects Designation as `Senior Software Engineer L2` and `Senior Software Engineer L1`  and then searches it.
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test search Manage Team appraisal
+user navigates to Manage Team appraisal form under appraisal management
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/ManageTeamAppraisal
+user selects appraisal cycle as  `April 2022` , location as `Canan Tower`, Vertical as `Gemini solutions`, Division, DC Manager, DC Chair and team are left as default
+User selects Department as `Human Resource` and then searches it.
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test search in Employee appraisals
+user navigates to Employee appraisal under appraisal management
+redirect to  : https://mymis.geminisolutions.com/AppraisalManagement/EmployeesAppraisal
+user selects appraisal cycle as  `April 2021` , leave appraisal status, Dc manager as default, choose  Dc chair as `Akshi Khattar` and search
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test Add Staff member 
+user navigates to manager staff member under user management
+redirect to  : https://mymis.geminisolutions.com/UserManagement/ManageStaffMember
+user adds new staff member and enters name as `test123` , phone number as `234354565` and selects location as `Canan tower` and saves it
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test Add options in manage meal
+user navigates to manage under meal management
+redirect to : vhttps://mymis.geminisolutions.com/MealManagement/MealManage
+user adds new meal period and enters `test 123` and saves it under meal period tab
+user adds  new meal type and enters `test-1234` and saves it under meal type tab
+user adds  new meal category and enters `test-1234` and saves it under meal category tab
+user adds  new meal dishes and enters `test-1234` and saves it under meal dishes tab 
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test Add options in meal package
+user navigates to meal package under meal management
+redirect to : vhttps://mymis.geminisolutions.com/MealManagement/MealPackage
+user adds new meal package and selects meal period as `test123` , meal type as `italian` and meal category as `Vegan` and saves it
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add role in manage role
+user navigates to manage role under Adiministrations
+redirect to  : https://mymis.geminisolutions.com/Administrations/ManageRole
+user adds a role and enters the name as `test123` and adds role
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test edit role in manage role
+user navigates to manage role under Adiministrations
+redirect to  : https://mymis.geminisolutions.com/Administrations/ManageRole
+user updates the role `test123`
+user changes the name to `test124` and updates the role
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test edit user role under user role
+user navigates to user role under Administrations
+redirect to : https://mymis.geminisolutions.com/Administrations/UserRole
+user edits the user role for user `123 User`
+user selects role as `MIS Administrator` and updates the user role
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add navigation menu
+user navigates to Manage Menu under Administrations
+redirect to : https://mymis.geminisolutions.com/Administrations/ManageMenu
+user adds a new navigation menu
+user enters menu name, action name, controller name, css class and menu sequence as  `test123`
+user toggles select menu and selects is link enabled and is delegatable as true 
+user adds the navigation menu  
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add Scheduler Action
+user navigates to Manage Scheduler under Administrations
+redirect to : https://mymis.geminisolutions.com/Administrations/ManageScheduler
+user adds scheduler action
+user enters the scheduler name,  description, function name 
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add designation group
+user navigates to Manage designation under HR Portal
+redirect to : https://mymis.geminisolutions.com/HRPortal/ManageDesignation
+user adds new designation group and enters designation group title as `test1233` and saves it
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test new department
+user navigates to Manage department/teams under HR Portal
+redirect to : https://mymis.geminisolutions.com/HRPortal/ManageDepartment
+user adds new department and enters department name, department description as `test1233`
+user selects department head as `123 User` and division name as `Seekhley` and adds new department
+"""
+,
+"""
+Background: User login at https://mymis.geminisolutions.com/Account/Login
+User Types user id : 'webadmin'
+User types password : 'Gemini@1234' and logs in
+redirect to : https://mymis.geminisolutions.com/
+Scenario Outline : Test add client in invoice portal
+user navigates to invoice portal under Account portal
+redirect to : https://mymis.geminisolutions.com/AccountsPortal/InvoiceReport
+user adds new client and enters the name as `test123` and saves it 
 """
 ]
+
 
 
 dir_names = [
@@ -269,5 +498,25 @@ dir_names = [
     # "dev-athena-assign-learners-batches",
     # "dev-athena-login-filter-batches",
     # "dev-athena-login-filter-assign-learners",
-    # "dev-athena-login-filter-unassign-candidate"
+    # "dev-athena-login-filter-unassign-candidate" ,
+    "mymis-add-appraisal-cycle-save",
+    "mymis-update-appraisal-cycle",
+    "mymis-delete-appraisal-cycle",
+    "mymis-add-parameter-appraisal",
+    "mymis-search-parameter-appraisal",
+    "mymis-search-appraisal-parameter-master",
+    "mymis-search-competency-appraisal",
+    "mymis-search-manage-team-appraisal",
+    "mymis-search-employee-appraisals",
+    "mymis-add-staff-member-user-management",
+    "mymis-manage-meal-add-options",
+    "mymis-add-meal-package-save",
+    "mymis-manage-role-add-role",
+    "mymis-edit-role-manage-role",
+    "mymis-edit-user-role-administration",
+    "mymis-add-navigation-menu-administrations",
+    "mymis-add-scheduler-action-administrations",
+    "mymis-add-designation-group-hr-portal",
+    "mymis-add-department-hr-portal",
+    "mymis-add-client-invoice-portal"
 ]
